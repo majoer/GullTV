@@ -1,11 +1,25 @@
-export async function getStatus(): Promise<string> {
-    return (await fetch("/vlc")).text()
+import type { VlcMediaStatus } from "../../domain/vlc-media-status"
+
+export async function getStatus(): Promise<VlcMediaStatus> {
+    return (await fetch("/api/vlc/requests/status.json")).json()
 }
 
-export async function toggleFullscreen(): Promise<string> {
-    return (await fetch("/api/vlc/requests/status.json?command=fullscreen")).text()
+export async function toggleFullscreen(): Promise<any> {
+    return (await fetch("/api/vlc/requests/status.json?command=fullscreen")).json()
 } 
 
-export async function play(uri: string): Promise<string> {
-    return (await fetch(`/api/vlc/requests/status.json?command=in_play&input=${uri}`)).text()
+export async function play(uri: string): Promise<any> {
+    return (await fetch(`/api/vlc/requests/status.json?command=in_play&input=${uri}`)).json()
+} 
+
+export async function pause(): Promise<any> {
+    return (await fetch(`/api/vlc/requests/status.json?command=pl_forcepause`)).json()
+} 
+
+export async function resume(): Promise<any> {
+    return (await fetch(`/api/vlc/requests/status.json?command=pl_forceresume`)).json()
+} 
+
+export async function seek(value: string | number): Promise<any> {
+    return (await fetch(`/api/vlc/requests/status.json?command=seek&val=${value}`)).json()
 } 
