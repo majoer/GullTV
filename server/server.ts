@@ -4,7 +4,7 @@ import { MediaService } from "./service/media-service";
 
 const port = 3000;
 const vlcTarget = "http://localhost:8080";
-export const app = express();
+const app = express();
 const mediaService = MediaService();
 
 app.get("/api/vlc/{*vlcPath}", async (req, res) => {
@@ -26,19 +26,17 @@ app.get("/api/vlc/{*vlcPath}", async (req, res) => {
 app.get("/api/media", async (req, res) => {
   console.log(`IN GET ${req.url}`);
   const folder: string = (req.query["folder"] as string) || "";
-
+  
   const media = await mediaService.getMedia(folder);
   res.status(200).json(media);
 });
 
 app.use(express.static("dist/client"));
 
-if (import.meta.env.PROD) {
-  app.listen(port, (error) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(`Express started on ${port}`);
-    }
-  });
-}
+app.listen(port, (error) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log(`Express started on ${port}`);
+  }
+});
