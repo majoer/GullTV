@@ -20,10 +20,11 @@ export const MediaService = () => ({
         return {
           name: file.name,
           parent,
-          path: `${parent}/${file.name}`,
+          path: `${rootDir}/${parent}/${file.name}`,
           isDirectory: file.isDirectory(),
         };
       }),
     };
   },
+  
 });
