@@ -1,12 +1,13 @@
 import axios from "axios";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
+const autorunVlc = process.env.AUTORUN_VLC === "true";
 const vlcTarget = "http://localhost:8080";
 let vlc: ChildProcessWithoutNullStreams | undefined;
 
 export const VlcService = () => ({
   runVlcCommand: async (command: string) => {
-    if (!vlc) {
+    if (!vlc && autorunVlc) {
       vlc = await startVlc();
     }
 

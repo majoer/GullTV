@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "start:vlc": "vlc --extraintf luaintf --lua-intf=http --http-password=mats",
     "start": "NODE_ENV=production node dist/server/server.js",
     "deploy": "npm run build && sh deploy.sh",
-    "dev": "concurrently 'npm run dev:server' 'npm run dev:frontend'",
+    "dev": "concurrently 'npm run dev:server' 'npm run dev:frontend' 'npm run start:vlc'",
     "dev:server": "nodemon --watch server --ext .ts --exec 'ts-node --project tsconfig.express.json server/server.ts'",
     "dev:frontend": "vite",
     "build": "tsc -b && vite build",

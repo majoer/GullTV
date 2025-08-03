@@ -32,6 +32,10 @@ export interface StreamInfo {
   [key: string]: {
     [property: string]: string;
   };
+  meta: {
+    encoded_by: string;
+    filename: string;
+  };
 }
 
 export interface InformationCategory {
@@ -59,8 +63,8 @@ export interface VlcMediaStatus {
   stats: MediaStats;
   equalizer: any[];
   videoeffects: VideoEffects;
-  information: InformationCategory;
-  state: 'playing' | 'stopped' | 'paused';
+  information?: InformationCategory;
+  state: "playing" | "stopped" | "paused";
   repeat: boolean;
   loop: boolean;
   fullscreen: boolean | 0;

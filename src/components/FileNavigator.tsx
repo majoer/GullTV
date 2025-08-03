@@ -3,7 +3,11 @@ import { useLocation } from "react-router-dom";
 import { getMedia } from "../api/media-api";
 import { File } from "./File";
 
-export const FileNavigator = () => {
+export interface FileNavigatorProps {
+  playingFilename?: string;
+}
+
+export const FileNavigator = (props: FileNavigatorProps) => {
   const location = useLocation();
 
   const {
@@ -19,12 +23,9 @@ export const FileNavigator = () => {
   if (isPending) return <>Loading ...</>;
 
   return (
-    <div className="flex flex-row">
+    <div className="grid grid-cols-1 md:grid-cols-3">
       {files.media.map((file) => (
-        <File
-          key={file.name}
-          file={file}
-        ></File>
+        <File playingFilename={props.playingFilename} key={file.name} file={file}></File>
       ))}
     </div>
   );
