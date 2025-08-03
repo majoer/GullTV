@@ -24,7 +24,7 @@ app.get("/api/media", async (req, res) => {
   res.status(200).json(media);
 });
 
-app.use(express.static("dist/client"));
+app.use('{*all}', express.static("dist/client"));
 
 app.listen(port, (error) => {
   if (error) {

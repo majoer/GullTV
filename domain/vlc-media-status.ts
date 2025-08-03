@@ -1,3 +1,35 @@
+export type StreamType = "Video" | "Audio" | "Subtitle";
+
+export interface BaseStream {
+  Type: StreamType;
+  Language?: string;
+  Codec: string;
+}
+
+export interface VideoStream extends BaseStream {
+  Type: "Video";
+  DecodedFormat: string;
+  FrameRate: number;
+  VideoResolution: string; // e.g. "1920x1080"
+  Orientation: string;
+  BufferDimensions: string;
+  ChromaLocation: string;
+}
+
+export interface AudioStream extends BaseStream {
+  Type: "Audio";
+  BitsPerSample: number;
+  Channels: string; // e.g. "Stereo"
+  SampleRate: number; // in Hz
+}
+
+export interface SubtitleStream extends BaseStream {
+  Type: "Subtitle";
+  Description?: string;
+}
+
+export type MediaStream = VideoStream | AudioStream | SubtitleStream;
+
 export interface MediaStats {
   sentbytes: number;
   readpackets: number;
@@ -28,15 +60,14 @@ export interface VideoEffects {
   gamma: number;
 }
 
-export interface StreamInfo {
-  [key: string]: {
-    [property: string]: string;
-  };
+export type StreamInfo = {
   meta: {
     encoded_by: string;
     filename: string;
   };
-}
+} & {
+  [key: string]: MediaStream;
+};
 
 export interface InformationCategory {
   category: StreamInfo;

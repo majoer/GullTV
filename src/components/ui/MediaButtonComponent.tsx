@@ -9,7 +9,7 @@ export const MediaButtonComponent = (props: MediaButtonComponentProps) => {
   return (
     <button
       {...rest}
-      className={`cursor-pointer w-20 h-20 fill-orange-500 hover:fill-orange-300 ${className ?? ''}`}
+      className={`cursor-pointer w-15 h-15 fill-orange-500 hover:fill-orange-300 ${className ?? ''}`}
     >
       {children}
     </button>

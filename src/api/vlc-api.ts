@@ -23,3 +23,9 @@ export async function resume(): Promise<VlcMediaStatus> {
 export async function seek(value: string | number): Promise<VlcMediaStatus> {
     return (await fetch(`/api/vlc/requests/status.json?command=seek&val=${value}`)).json()
 } 
+export async function setAudio(value: string | number): Promise<VlcMediaStatus> {
+    return (await fetch(`/api/vlc/requests/status.json?command=audio_track&val=${value}`)).json()
+} 
+export async function setSubtitle(value: string | number): Promise<VlcMediaStatus> {
+    return (await fetch(`/api/vlc/requests/status.json?command=subtitle_track&val=${value}`)).json()
+} 

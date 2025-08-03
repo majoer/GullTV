@@ -12,7 +12,7 @@ export const Seek = (props: SeekProps) => {
 
   return (
     <div
-      className="w-full bg-white rounded-2xl h-2 my-4 relative cursor-pointer"
+      className="w-full bg-white rounded-2xl h-2 my-2 relative cursor-pointer"
       onClick={async (e) => {
         const estimatedPosition = Math.round(
           (e.nativeEvent.offsetX / e.currentTarget.clientWidth) * length
