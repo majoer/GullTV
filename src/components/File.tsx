@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import type { Media } from "../../domain/media";
-import { play } from "../api/vlc-api";
+import { play, toggleFullscreen } from "../api/vlc-api";
 
 export interface FileProps {
   file: Media;
@@ -20,7 +20,7 @@ export const File = (props: FileProps) => {
         <button
           className="m-2 p-2 border-2"
           onClick={async () => {
-            await play(props.file.path)
+            await play(props.file.path);
           }}
         >
           {props.file.name}

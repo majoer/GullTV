@@ -60,8 +60,8 @@ export interface VlcMediaStatus {
   equalizer: any[];
   videoeffects: VideoEffects;
   information: InformationCategory;
-  state: string;
+  state: 'playing' | 'stopped' | 'paused';
   repeat: boolean;
   loop: boolean;
-  fullscreen: boolean;
+  fullscreen: boolean | 0;
 }

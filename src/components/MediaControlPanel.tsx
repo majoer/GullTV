@@ -1,16 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStatus, pause, resume } from "../api/vlc-api";
+import { getStatus, pause, resume, toggleFullscreen } from "../api/vlc-api";
 import { Button } from "./Button";
 import { Seek } from "./Seek";
+import { useEffect } from "react";
 
 export const MediaControlPanel = () => {
-  const { isPending, data: status, isError } = useQuery({
+  const {
+    isPending,
+    data: status,
+    isError,
+  } = useQuery({
     queryKey: ["status"],
     queryFn: getStatus,
     refetchInterval: 1000,
   });
 
   const disabled = isPending || !!isError;
+  useEffect(() => {
+    if (status?.fullscreen === false && status?.state === 'playing') {
+      toggleFullscreen().then();
+    }
+  }, [status]);
 
   return (
     <div className="absolute bottom-2 left-0 right-0 text-center">
