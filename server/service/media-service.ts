@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { MediaResponse } from "../../domain/media";
 
-const rootDir = "/home/mats/media";
+const rootDir = process.env.MEDIA_DIRECTORY || "/home/mats/media";
 
 export const MediaService = () => ({
   getMedia: async (folder: string): Promise<MediaResponse> => {
@@ -26,5 +26,5 @@ export const MediaService = () => ({
       }),
     };
   },
-  
+
 });

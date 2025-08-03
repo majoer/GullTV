@@ -15,6 +15,7 @@ export const VlcService = () => ({
     console.log(`OUT GET ${url}`);
     return await axios.get(url, {
       insecureHTTPParser: true,
+      validateStatus: () => true,
       auth: {
         username: "",
         password: "mats",

@@ -1,16 +1,16 @@
 [Unit]
 Description=Matsflix
-After=network.target
+After=graphical-session.target
 
 [Service]
 ExecStart=/home/matsj/matsflix/nvm-start.sh
 WorkingDirectory=/home/matsj/matsflix
 Restart=always
-User=matsj
 Environment=NODE_ENV=production
+Environment=MEDIA_DIRECTORY=/home/matsj/media
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=myapp
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
