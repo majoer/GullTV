@@ -10,7 +10,7 @@ ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user stop ${APP_NAME}" || true
 
 echo "Syncing files..."
 rsync -az --delete ./dist ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
-rsync -az --delete ./mount.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
+rsync -az --delete --chmod=744 ./mount.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete ./package.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete ./package-lock.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete --chmod=744 ./nvm-start.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
@@ -19,6 +19,7 @@ echo "Updating Matsflix service .."
 rsync -az --delete ./Matsflix.service ${REMOTE_USER}@${REMOTE_HOST}:/tmp/${APP_NAME}.service
 ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo mv /tmp/${APP_NAME}.service /etc/systemd/user/"
 ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user daemon-reload"
+ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user enable ${APP_NAME}"
 
 echo "Installing dependencies..."
 ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_DIR}; source ~/.nvm/nvm.sh; npm i -g npm; npm install"
