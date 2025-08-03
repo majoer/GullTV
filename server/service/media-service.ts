@@ -25,7 +25,7 @@ export const MediaService = () => ({
     });
 
     media.sort((a, b) =>
-      a.name.toLowerCase().localeCompare(b.name.toLowerCase(), "nb")
+      a.name.localeCompare(b.name, "nb", { numeric: true, sensitivity: "base" })
     );
 
     return {
