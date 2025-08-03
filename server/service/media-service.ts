@@ -13,18 +13,23 @@ export const MediaService = () => ({
       withFileTypes: true,
     });
 
-    return {
-      media: dir.map((file) => {
-        const parent = file.parentPath.replace(rootDir + "/", "");
+    const media = dir.map((file) => {
+      const parent = file.parentPath.replace(rootDir + "/", "");
 
-        return {
-          name: file.name,
-          parent,
-          path: `${rootDir}/${parent}/${file.name}`,
-          isDirectory: file.isDirectory(),
-        };
-      }),
+      return {
+        name: file.name,
+        parent,
+        path: `${rootDir}/${parent}/${file.name}`,
+        isDirectory: file.isDirectory(),
+      };
+    });
+
+    media.sort((a, b) =>
+      a.name.toLowerCase().localeCompare(b.name.toLowerCase(), "nb")
+    );
+
+    return {
+      media,
     };
   },
-
 });
