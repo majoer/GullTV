@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom";
 import type { Media } from "../../domain/media";
 import { play } from "../api/vlc-api";
+import { NavLinkComponent } from "./ui/NavLinkComponent";
 
 export interface FileProps {
   file: Media;
@@ -8,11 +8,13 @@ export interface FileProps {
 }
 
 export const File = (props: FileProps) => {
-  const isPlaying = props.playingFilename === props.file.name
+  const isPlaying = props.playingFilename === props.file.name;
   return (
     <>
-      <NavLink
-        className={`relative m-2 p-2 border-2 rounded-md overflow-clip ${isPlaying ? 'border-orange-500' : ''}`}
+      <NavLinkComponent
+        className={`relative m-2 p-2 border-2 rounded-md overflow-clip ${
+          isPlaying ? "border-orange-500" : ""
+        }`}
         to={`${props.file.parent}/${props.file.name}`}
         onClick={async (e) => {
           if (!props.file.isDirectory) {
@@ -22,10 +24,7 @@ export const File = (props: FileProps) => {
         }}
       >
         <div className="relative">
-          <div className=" overflow-clip mr-6">
-            
-          {props.file.name}
-          </div>
+          <div className=" overflow-clip mr-6">{props.file.name}</div>
           {props.file.isDirectory ? (
             <svg
               width="24"
@@ -58,7 +57,7 @@ export const File = (props: FileProps) => {
             </svg>
           )}
         </div>
-      </NavLink>
+      </NavLinkComponent>
     </>
   );
 };

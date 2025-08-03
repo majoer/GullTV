@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getStatus } from "../api/vlc-api";
 import { FileNavigator } from "./FileNavigator";
 import { MediaControlPanel } from "./MediaControlPanel";
+import { BreadcrumbsComponent } from "./Breadcrumbs";
 
 export const MatsflixComponent = () => {
   const {
@@ -19,6 +20,7 @@ export const MatsflixComponent = () => {
 
   return (
     <div className="m-auto mb-28">
+      <BreadcrumbsComponent/>
       <FileNavigator playingFilename={playingFilename} />
       <MediaControlPanel status={status} disabled={disabled} />
     </div>

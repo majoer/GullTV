@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import type { VlcMediaStatus } from "../../domain/vlc-media-status";
 import { pause, resume, toggleFullscreen } from "../api/vlc-api";
-import { MediaButton } from "./MediaButton";
+import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { Seek } from "./Seek";
 
 export interface MediaControlPanelProps {
@@ -25,7 +25,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
       </div>
 
       <div className="flex flex-nowrap w-full justify-between">
-        <MediaButton disabled={disabled} aria-label="previous">
+        <MediaButtonComponent disabled={disabled} aria-label="previous">
           <svg
             viewBox="0 0 24 24"
             fill="inherit"
@@ -38,10 +38,10 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
               fill="inherit"
             />
           </svg>
-        </MediaButton>
+        </MediaButtonComponent>
 
         {status?.state === "playing" ? (
-          <MediaButton
+          <MediaButtonComponent
             aria-label="pause"
             disabled={disabled}
             onClick={async () => {
@@ -60,9 +60,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
                 fill="inherit"
               />
             </svg>
-          </MediaButton>
+          </MediaButtonComponent>
         ) : (
-          <MediaButton
+          <MediaButtonComponent
             aria-label="resume"
             disabled={disabled}
             onClick={async () => {
@@ -81,10 +81,10 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
                 fill="inherit"
               />
             </svg>
-          </MediaButton>
+          </MediaButtonComponent>
         )}
 
-        <MediaButton disabled={disabled} aria-label="next">
+        <MediaButtonComponent disabled={disabled} aria-label="next">
           <svg
             viewBox="0 0 24 24"
             fill="inherit"
@@ -97,7 +97,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
               fill="inherit"
             />
           </svg>
-        </MediaButton>
+        </MediaButtonComponent>
       </div>
     </footer>
   );
