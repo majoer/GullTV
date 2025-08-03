@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { StreamInfo, VlcMediaStatus } from "../../domain/vlc-media-status";
 import {
+  next,
   pause,
+  previous,
   resume,
   setAudio,
   setSubtitle,
@@ -39,7 +41,10 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
     <footer className="fixed bottom-0 left-0 right-0 w-full h-28 bg-black flex flex-col">
       <div className="mx-3 text-center">
         <Seek disabled={disabled} status={status}></Seek>
-        <div className="text-nowrap overflow-clip" title={category?.meta.filename}>
+        <div
+          className="text-nowrap overflow-clip"
+          title={category?.meta.filename}
+        >
           {category?.meta.filename}
         </div>
       </div>
@@ -100,7 +105,13 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           </PopupComponent>
         </MediaButtonComponent>
 
-        <MediaButtonComponent disabled={disabled} aria-label="previous">
+        <MediaButtonComponent
+          disabled={disabled}
+          aria-label="previous"
+          onClick={async () => {
+            await previous();
+          }}
+        >
           <svg
             viewBox="0 0 24 24"
             fill="inherit"
@@ -157,7 +168,13 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             </svg>
           </MediaButtonComponent>
         )}
-        <MediaButtonComponent disabled={disabled} aria-label="next">
+        <MediaButtonComponent
+          disabled={disabled}
+          aria-label="next"
+          onClick={async () => {
+            await next();
+          }}
+        >
           <svg
             viewBox="0 0 24 24"
             fill="inherit"

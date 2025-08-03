@@ -25,7 +25,7 @@ export const FileNavigator = (props: FileNavigatorProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3">
       {files.media.map((file) => (
-        <File playingFilename={props.playingFilename} key={file.name} file={file}></File>
+        <File playingFilename={props.playingFilename} key={file.name} file={file} allFiles={files.media}></File>
       ))}
     </div>
   );

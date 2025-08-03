@@ -1,9 +1,17 @@
 import type { Media } from "../../domain/media";
-import { play } from "../api/vlc-api";
+import type { VlcPlaylistItem } from "../../domain/vlc-playlist";
+import {
+  addToPlaylist,
+  emptyPlaylist,
+  getPlaylist,
+  play,
+  playPlaylistItem,
+} from "../api/vlc-api";
 import { NavLinkComponent } from "./ui/NavLinkComponent";
 
 export interface FileProps {
   file: Media;
+  allFiles: Media[];
   playingFilename?: string;
 }
 
@@ -19,7 +27,25 @@ export const File = (props: FileProps) => {
         onClick={async (e) => {
           if (!props.file.isDirectory) {
             e.preventDefault();
-            await play(props.file.path);
+
+            await emptyPlaylist();
+
+            for (const file of props.allFiles.filter((f) => !f.isDirectory)) {
+              await addToPlaylist(file.path);
+            }
+
+            const playlist = await getPlaylist();
+            const playlistItems = playlist.children[0].children as VlcPlaylistItem[];
+            const item = playlistItems.find(
+              (c) => c.name === props.file.name
+            );
+
+            if (item) {
+              await playPlaylistItem(item?.id);
+            } else {
+              console.error("Unable to find item in playlist, using fallback");
+              await play(props.file.path);
+            }
           }
         }}
       >
