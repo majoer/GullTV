@@ -1,6 +1,7 @@
 import express from "express";
 import { MediaService } from "./service/media-service";
 import { VlcService } from "./service/vlc-service";
+import path from "path";
 
 const port = 3000;
 const app = express();
@@ -24,7 +25,10 @@ app.get("/api/media", async (req, res) => {
   res.status(200).json(media);
 });
 
-app.use('{*all}', express.static("dist/client"));
+app.use(express.static("dist/client"));
+app.get("{*all}", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist/client", "index.html"));
+});
 
 app.listen(port, (error) => {
   if (error) {

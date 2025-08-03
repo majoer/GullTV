@@ -7,8 +7,8 @@ import {
   setSubtitle,
   toggleFullscreen,
 } from "../api/vlc-api";
-import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { Seek } from "./Seek";
+import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { PopupComponent } from "./ui/PopupComponent";
 
 export interface MediaControlPanelProps {
@@ -22,7 +22,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
   const [volumeOpen, setVolumeOpen] = useState(false);
 
   const category = props.status?.information?.category;
-  const { meta, ...streams } = category || ({} as StreamInfo);
+  const { meta: _, ...streams } = category || ({} as StreamInfo);
   const allStreams = Object.keys(streams);
   const audioStreams = allStreams.filter((s) => streams[s].Type === "Audio");
   const subtitleStreams = allStreams.filter(
@@ -39,7 +39,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
     <footer className="fixed bottom-0 left-0 right-0 w-full h-28 bg-black flex flex-col">
       <div className="mx-3 text-center">
         <Seek disabled={disabled} status={status}></Seek>
-        <div className="text-nowrap overflow-clip" title={meta.filename}>{meta.filename}</div>
+        <div className="text-nowrap overflow-clip" title={category?.meta.filename}>
+          {category?.meta.filename}
+        </div>
       </div>
 
       <div className="flex flex-nowrap w-full justify-between">
