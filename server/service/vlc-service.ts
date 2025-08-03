@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChildProcessWithoutNullStreams, spawn } from "child_process";
+import { ChildProcessWithoutNullStreams, exec, spawn } from "child_process";
 
 const autorunVlc = process.env.AUTORUN_VLC === "true";
 const vlcTarget = "http://localhost:8080";
@@ -9,6 +9,7 @@ export const VlcService = () => ({
   runVlcCommand: async (command: string) => {
     if (!vlc && autorunVlc) {
       vlc = await startVlc();
+      focusVlc();
     }
 
     const url = `${vlcTarget}/${command}`;
@@ -39,8 +40,19 @@ function startVlc(): Promise<ChildProcessWithoutNullStreams> {
 
     process.on("close", (code) => {
       console.log(`child process exited with code ${code}`);
-      vlc = undefined
+      vlc = undefined;
       reject();
     });
+  });
+}
+
+function focusVlc() {
+  exec("wmctrl -a 'VLC media player'", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
   });
 }
