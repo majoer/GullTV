@@ -38,6 +38,7 @@ function startVlc(): Promise<ChildProcessWithoutNullStreams> {
 
     process.on("close", (code) => {
       console.log(`child process exited with code ${code}`);
+      vlc = undefined
       reject();
     });
   });
