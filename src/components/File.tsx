@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import type { Media } from "../../domain/media";
-import { play, toggleFullscreen } from "../api/vlc-api";
+import { play } from "../api/vlc-api";
 
 export interface FileProps {
   file: Media;
