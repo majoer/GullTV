@@ -24,9 +24,16 @@ export const MediaService = () => ({
       };
     });
 
-    media.sort((a, b) =>
-      a.name.localeCompare(b.name, "nb", { numeric: true, sensitivity: "base" })
-    );
+    media.sort((a, b) => {
+      if (a.isDirectory !== b.isDirectory) {
+        return a.isDirectory ? -1 : 1;
+      }
+
+      return a.name.localeCompare(b.name, "nb", {
+        numeric: true,
+        sensitivity: "base",
+      });
+    });
 
     return {
       media,
