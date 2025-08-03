@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist/server",
+    "outDir": "dist",
     "composite": true,
     "module": "CommonJS",
     "target": "ES2023",
