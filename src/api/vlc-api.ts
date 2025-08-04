@@ -1,3 +1,4 @@
+import type { Media } from "../../domain/media";
 import type { VlcMediaStatus } from "../../domain/vlc-media-status";
 import type { VlcPlaylist } from "../../domain/vlc-playlist";
 
@@ -81,4 +82,24 @@ export async function setSubtitle(
       `/api/vlc/requests/status.json?command=subtitle_track&val=${value}`
     )
   ).json();
+}
+
+export async function createPlaylistAndPlay(files: Media[], file: Media) {
+  await emptyPlaylist();
+
+  for (const file of files.filter((f) => !f.isDirectory)) {
+    await addToPlaylist(file.path);
+  }
+
+  const playlist = await getPlaylist();
+  const item = playlist.children[0]?.children
+    .filter((c) => c.type === "leaf")
+    .find((c) => c.name === file.name);
+
+  if (item) {
+    await playPlaylistItem(item?.id);
+  } else {
+    console.error("Unable to find item in playlist, using fallback");
+    await play(file.path);
+  }
 }

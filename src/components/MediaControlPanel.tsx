@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { StreamInfo, VlcMediaStatus } from "../../domain/vlc-media-status";
 import {
+  createPlaylistAndPlay,
   next,
   pause,
   previous,
@@ -12,14 +13,16 @@ import {
 import { Seek } from "./Seek";
 import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { PopupComponent } from "./ui/PopupComponent";
+import type { Media } from "../../domain/media";
 
 export interface MediaControlPanelProps {
   status?: VlcMediaStatus;
   disabled: boolean;
+  allFiles: Media[];
 }
 
 export const MediaControlPanel = (props: MediaControlPanelProps) => {
-  const { status, disabled } = props;
+  const { status, disabled, allFiles } = props;
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
 
@@ -30,6 +33,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
   const subtitleStreams = allStreams.filter(
     (s) => streams[s].Type === "Subtitle"
   );
+  const resumableFile = allFiles.find((f) => !f.isDirectory && f.viewProgress);
 
   useEffect(() => {
     if (status?.fullscreen === false && status?.state === "playing") {
@@ -43,9 +47,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
         <Seek disabled={disabled} status={status}></Seek>
         <div
           className="text-nowrap overflow-clip"
-          title={category?.meta.filename}
+          title={category?.meta.filename || resumableFile?.name}
         >
-          {category?.meta.filename}
+          {category?.meta.filename || resumableFile?.name}
         </div>
       </div>
 
@@ -151,7 +155,13 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             aria-label="resume"
             disabled={disabled}
             onClick={async () => {
-              await resume();
+              if (status?.information) {
+                await resume();
+              } else {
+                if (resumableFile) {
+                  await createPlaylistAndPlay(props.allFiles, resumableFile);
+                }
+              }
             }}
           >
             <svg

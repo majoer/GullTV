@@ -1,8 +1,8 @@
-export interface ViewProgressResponse {
-  [key: string]: ViewProgress;
+export interface ViewProgress {
+  [key: string]: ViewProgressFile;
 }
 
-export interface ViewProgress {
-  fileName: string;
+export interface ViewProgressFile {
+  filename: string;
   position: number;
 }

@@ -1,7 +1,8 @@
+import { useEffect, useRef, useState } from "react";
 import type { Media } from "../../domain/media";
-import type { VlcPlaylistItem } from "../../domain/vlc-playlist";
 import {
   addToPlaylist,
+  createPlaylistAndPlay,
   emptyPlaylist,
   getPlaylist,
   play,
@@ -12,40 +13,35 @@ import { NavLinkComponent } from "./ui/NavLinkComponent";
 export interface FileProps {
   file: Media;
   allFiles: Media[];
+  isPlaying: boolean;
   playingFilename?: string;
 }
 
 export const File = (props: FileProps) => {
-  const isPlaying = props.playingFilename === props.file.name;
+  const { isPlaying, file } = props;
+  const fileIsLoaded = props.playingFilename === file.name;
+  const [leftOff, setLeftOff] = useState(
+    !file.isDirectory && file.viewProgress
+  );
+  const prevIsPlaying = useRef(isPlaying);
+
+  useEffect(() => {
+    if (prevIsPlaying.current !== isPlaying) {
+      setLeftOff(undefined);
+    }
+
+    prevIsPlaying.current = isPlaying;
+  }, [isPlaying]);
+
   return (
     <>
       <NavLinkComponent
-        className={`relative m-2 p-2 border-2 rounded-md overflow-clip ${
-          isPlaying ? "border-orange-500" : ""
-        }`}
+        className={`relative m-2 p-2 border-2 rounded-md overflow-clip`}
         to={`${props.file.parent}/${props.file.name}`}
         onClick={async (e) => {
           if (!props.file.isDirectory) {
             e.preventDefault();
-
-            await emptyPlaylist();
-
-            for (const file of props.allFiles.filter((f) => !f.isDirectory)) {
-              await addToPlaylist(file.path);
-            }
-
-            const playlist = await getPlaylist();
-            const playlistItems = playlist.children[0].children as VlcPlaylistItem[];
-            const item = playlistItems.find(
-              (c) => c.name === props.file.name
-            );
-
-            if (item) {
-              await playPlaylistItem(item?.id);
-            } else {
-              console.error("Unable to find item in playlist, using fallback");
-              await play(props.file.path);
-            }
+            await createPlaylistAndPlay(props.allFiles, props.file);
           }
         }}
       >
@@ -71,7 +67,11 @@ export const File = (props: FileProps) => {
               height="38"
               width="38"
               viewBox="0 0 24 24"
-              className="absolute -right-1 top-1/2 -translate-y-1/2 fill-orange-500"
+              className={`absolute -right-1 top-1/2 -translate-y-1/2 ${
+                isPlaying && fileIsLoaded ? "animate-pulse" : ""
+              } ${
+                leftOff || fileIsLoaded ? "fill-green-500" : "fill-orange-500"
+              }`}
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
