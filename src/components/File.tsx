@@ -1,12 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Media } from "../../domain/media";
 import {
-  addToPlaylist,
-  createPlaylistAndPlay,
-  emptyPlaylist,
-  getPlaylist,
-  play,
-  playPlaylistItem,
+  createPlaylistAndPlay
 } from "../api/vlc-api";
 import { NavLinkComponent } from "./ui/NavLinkComponent";
 
