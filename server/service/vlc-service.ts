@@ -90,7 +90,7 @@ async function startPollingStatus(wss: WebSocketServer, viewProgressService: Vie
     const item = await getVlcPlaylistItem(filename);
     const parentFolder = item?.uri.split("/").slice(2, -1).join("/")
     if (parentFolder) {
-      viewProgressService.saveProgress(parentFolder, {
+      viewProgressService.saveProgress(decodeURIComponent(parentFolder), {
         position: vlcMediaStatus.position,
         filename: filename,
       });
