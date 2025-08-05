@@ -104,6 +104,6 @@ export interface VlcMediaStatus {
 }
 
 export interface TrackedVlcMediaStatus {
-  data: VlcMediaStatus;
-  changes?: Diff<VlcMediaStatus, VlcMediaStatus>[];
+  current: VlcMediaStatus;
+  prev?: VlcMediaStatus;
 }

@@ -6,11 +6,12 @@ export interface FileProps {
   file: Media;
   allFiles: Media[];
   isPlaying: boolean;
+  hasLoadedFileInParent: boolean;
   playingFilename?: string;
 }
 
 export const File = (props: FileProps) => {
-  const { isPlaying, file } = props;
+  const { isPlaying, hasLoadedFileInParent, file } = props;
   const fileIsLoaded = props.playingFilename === file.name;
   const leftOff = !file.isDirectory && file.viewProgress;
 
@@ -56,7 +57,7 @@ export const File = (props: FileProps) => {
               } ${
                 fileIsLoaded
                   ? "fill-green-500"
-                  : leftOff
+                  : leftOff && !hasLoadedFileInParent
                   ? "fill-yellow-400"
                   : "fill-orange-500"
               }`}

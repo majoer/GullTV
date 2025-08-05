@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { Media } from "../../domain/media";
 import { File } from "./File";
 
@@ -8,15 +9,21 @@ export interface FileNavigatorProps {
 }
 
 export const FileNavigator = (props: FileNavigatorProps) => {
+  const { isPlaying, playingFilename, allFiles } = props;
+  const hasLoadedFile = useMemo(
+    () => !!allFiles.find((f) => f.name === playingFilename),
+    [allFiles, playingFilename]
+  );
   return (
     <div className="grid grid-cols-1 md:grid-cols-3">
-      {props.allFiles.map((file) => (
+      {allFiles.map((file) => (
         <File
-          isPlaying={props.isPlaying}
-          playingFilename={props.playingFilename}
+          isPlaying={isPlaying}
+          hasLoadedFileInParent={hasLoadedFile}
+          playingFilename={playingFilename}
           key={file.name}
           file={file}
-          allFiles={props.allFiles}
+          allFiles={allFiles}
         ></File>
       ))}
     </div>

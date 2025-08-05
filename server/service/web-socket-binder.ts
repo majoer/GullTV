@@ -25,7 +25,7 @@ export const bindWebsockets = (
 
       if (
         event.type === "status" &&
-        event.data.data.state !== "playing" &&
+        event.data.current.state !== "playing" &&
         webSocketServer.clients.size === 0
       ) {
         logger.info("No one is online or watching, unsubscribing");

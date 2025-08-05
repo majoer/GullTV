@@ -1,4 +1,3 @@
-import { diff } from "deep-diff";
 import { defer, interval, map, Observable, switchMap, tap } from "rxjs";
 import {
   TrackedVlcMediaStatus,
@@ -17,10 +16,10 @@ export const VlcObserver = (): Observable<TrackedVlcMediaStatus> => {
       ),
       map((response) => response.data),
       map<VlcMediaStatus, TrackedVlcMediaStatus>((status) => ({
-        data: status,
-        changes: previousStatus ? diff(previousStatus, status) : undefined,
+        current: status,
+        prev: previousStatus,
       })),
-      tap((result) => (previousStatus = result.data))
+      tap((result) => (previousStatus = result.current))
     );
   }
 

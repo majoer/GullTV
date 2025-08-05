@@ -1,6 +1,4 @@
-import {
-  useQuery
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 import type { WebsocketEvent } from "../../domain/websocket";
@@ -32,11 +30,10 @@ export const MatsflixComponent = () => {
   if (error) return <>Error</>;
   if (isPending) return <>Loading ...</>;
 
-  
   const mediaResponse = event?.type === "media" ? event.data : initialMedia;
   const status = event?.type === "status" ? event.data : undefined;
-  const isPlaying = status?.data?.state === "playing";
-  const playingFilename = status?.data?.information?.category.meta.filename;
+  const isPlaying = status?.current?.state === "playing";
+  const playingFilename = status?.current?.information?.category.meta.filename;
 
   return (
     <div className="m-auto mb-28">
@@ -47,7 +44,7 @@ export const MatsflixComponent = () => {
         allFiles={mediaResponse.media}
       />
       <MediaControlPanel
-        status={status?.data}
+        status={status?.current}
         disabled={!status}
         allFiles={mediaResponse.media}
       />

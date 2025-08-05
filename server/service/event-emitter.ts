@@ -9,14 +9,14 @@ export const createEventEmitter = (
   viewProgressService: ViewProgressService
 ): Observable<WebsocketEvent> => {
   async function saveProgressIfPlaying(status: TrackedVlcMediaStatus) {
-    const filename = status.data.information?.category.meta.filename;
+    const filename = status.current.information?.category.meta.filename;
 
-    if (status.data?.state === "playing" && filename) {
+    if (status.current?.state === "playing" && filename) {
       const item = await getPlaylistItem(filename);
       const parentFolder = item?.uri.split("/").slice(2, -1).join("/");
       if (parentFolder) {
         viewProgressService.saveProgress(decodeURIComponent(parentFolder), {
-          position: status.data.position,
+          position: status.current.position,
           filename: filename,
         });
       }
