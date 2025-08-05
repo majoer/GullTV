@@ -11,7 +11,7 @@ export interface VideoStream extends BaseStream {
   Type: "Video";
   DecodedFormat: string;
   FrameRate: number;
-  VideoResolution: string; // e.g. "1920x1080"
+  VideoResolution: string;
   Orientation: string;
   BufferDimensions: string;
   ChromaLocation: string;
@@ -20,8 +20,8 @@ export interface VideoStream extends BaseStream {
 export interface AudioStream extends BaseStream {
   Type: "Audio";
   BitsPerSample: number;
-  Channels: string; // e.g. "Stereo"
-  SampleRate: number; // in Hz
+  Channels: string
+  SampleRate: number;
 }
 
 export interface SubtitleStream extends BaseStream {
