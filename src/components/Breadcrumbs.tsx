@@ -12,7 +12,7 @@ export const BreadcrumbsComponent = () => {
           width="24"
           height="20"
           viewBox="0 0 24 20"
-          className="fill-red-700 hover:fill-amber-300"
+          className="fill-sky-100 hover:fill-amber-300"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path

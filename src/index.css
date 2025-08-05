@@ -2,6 +2,6 @@
 
 
 html {
-  background: black;
-  color: white;
+  background-color: black;
+  color: var(--color-sky-100);
 }

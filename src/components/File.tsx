@@ -18,7 +18,7 @@ export const File = (props: FileProps) => {
   return (
     <>
       <NavLinkComponent
-        className={`relative m-2 p-2 border-2 rounded-md overflow-clip`}
+        className={`relative m-2 p-2 bg-gray-800 rounded-md overflow-clip`}
         to={`${props.file.parent}/${props.file.name}`}
         onClick={async (e) => {
           if (!props.file.isDirectory) {
@@ -37,7 +37,7 @@ export const File = (props: FileProps) => {
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              className="absolute right-0 top-1/2 -translate-y-1/2 fill-blue-400"
+              className="absolute right-0 top-1/2 -translate-y-1/2 fill-sky-100"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path

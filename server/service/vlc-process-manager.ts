@@ -19,7 +19,7 @@ export const startVlc = () => {
   function focusVlc() {
     exec("wmctrl -a 'VLC media player'", (error, stdout, stderr) => {
       if (error) {
-        logger.error(`exec error: ${error}`);
+        logger.error(error);
         return;
       }
       vlcLogger.info(stdout);

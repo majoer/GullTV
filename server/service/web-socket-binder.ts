@@ -3,7 +3,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { WebsocketEvent } from "../../domain/websocket";
 import { logger } from "../logger";
 
-export const bindWebsockets = (
+export const bindWebSockets = (
   webSocketServer: WebSocketServer,
   eventEmitter: Observable<WebsocketEvent>
 ) => {

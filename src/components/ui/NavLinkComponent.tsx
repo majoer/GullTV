@@ -6,7 +6,7 @@ export const NavLinkComponent = (props: NavLinkComponentProps) => {
   const { className, children, ...rest } = props;
 
   return (
-    <NavLink className={`hover:text-amber-300 ${className ?? ""}`} {...rest}>
+    <NavLink className={`hover:bg-blue-900 ${className ?? ""}`} {...rest}>
       {children}
     </NavLink>
   );

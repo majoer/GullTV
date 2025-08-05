@@ -6,7 +6,7 @@ import { MediaFileService } from "./service/media-file-service";
 import { ViewProgressService } from "./service/view-progress-service";
 import { runVlcCommand as vlcRequest } from "./service/vlc-http-service";
 import { startVlc } from "./service/vlc-process-manager";
-import { bindWebsockets } from "./service/web-socket-binder";
+import { bindWebSockets } from "./service/web-socket-binder";
 import { logger } from "./logger";
 import chalk from "chalk";
 
@@ -20,7 +20,7 @@ if (autorunVlc) startVlc();
 const viewProgressService = ViewProgressService();
 const mediaService = MediaFileService(viewProgressService);
 const eventEmitter = createEventEmitter(viewProgressService);
-bindWebsockets(wss, eventEmitter);
+bindWebSockets(wss, eventEmitter);
 
 wss.on("connection", (socket: WebSocket) => {
   logger.info("Websocket connected");
