@@ -3,66 +3,66 @@ import type { VlcMediaStatus } from "../../domain/vlc-media-status";
 import type { VlcPlaylist } from "../../domain/vlc-playlist";
 
 export async function getStatus(): Promise<VlcMediaStatus> {
-  return (await fetch("/api/vlc/requests/status.json")).json();
+  return (await fetch("/api/vlc/status.json")).json();
 }
 
 export async function toggleFullscreen(): Promise<VlcMediaStatus> {
   return (
-    await fetch("/api/vlc/requests/status.json?command=fullscreen")
+    await fetch("/api/vlc/status.json?command=fullscreen")
   ).json();
 }
 
 export async function emptyPlaylist(): Promise<VlcMediaStatus> {
-  return (await fetch(`/api/vlc/requests/status.json?command=pl_empty`)).json();
+  return (await fetch(`/api/vlc/status.json?command=pl_empty`)).json();
 }
 
 export async function addToPlaylist(uri: string): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=in_enqueue&input=${uri}`)
+    await fetch(`/api/vlc/status.json?command=in_enqueue&input=${uri}`)
   ).json();
 }
 
 export async function getPlaylist(): Promise<VlcPlaylist> {
-  return (await fetch(`/api/vlc/requests/playlist.json`)).json();
+  return (await fetch(`/api/vlc/playlist.json`)).json();
 }
 
 export async function playPlaylistItem(id: string): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=pl_play&id=${id}`)
+    await fetch(`/api/vlc/status.json?command=pl_play&id=${id}`)
   ).json();
 }
 
 export async function next(): Promise<VlcMediaStatus> {
-  return (await fetch(`/api/vlc/requests/status.json?command=pl_next`)).json();
+  return (await fetch(`/api/vlc/status.json?command=pl_next`)).json();
 }
 
 export async function previous(): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=pl_previous`)
+    await fetch(`/api/vlc/status.json?command=pl_previous`)
   ).json();
 }
 
 export async function play(uri: string): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=in_play&input=${uri}`)
+    await fetch(`/api/vlc/status.json?command=in_play&input=${uri}`)
   ).json();
 }
 
 export async function pause(): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=pl_forcepause`)
+    await fetch(`/api/vlc/status.json?command=pl_forcepause`)
   ).json();
 }
 
 export async function resume(): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=pl_forceresume`)
+    await fetch(`/api/vlc/status.json?command=pl_forceresume`)
   ).json();
 }
 
 export async function seek(value: string | number): Promise<VlcMediaStatus> {
   return (
-    await fetch(`/api/vlc/requests/status.json?command=seek&val=${value}`)
+    await fetch(`/api/vlc/status.json?command=seek&val=${value}`)
   ).json();
 }
 export async function setAudio(
@@ -70,7 +70,7 @@ export async function setAudio(
 ): Promise<VlcMediaStatus> {
   return (
     await fetch(
-      `/api/vlc/requests/status.json?command=audio_track&val=${value}`
+      `/api/vlc/status.json?command=audio_track&val=${value}`
     )
   ).json();
 }
@@ -79,12 +79,15 @@ export async function setSubtitle(
 ): Promise<VlcMediaStatus> {
   return (
     await fetch(
-      `/api/vlc/requests/status.json?command=subtitle_track&val=${value}`
+      `/api/vlc/status.json?command=subtitle_track&val=${value}`
     )
   ).json();
 }
 
-export async function createPlaylistAndPlay(files: Media[], file: Media) {
+export async function createPlaylistAndPlay(
+  files: Media[],
+  file: Media
+): Promise<VlcMediaStatus> {
   await emptyPlaylist();
 
   for (const file of files.filter((f) => !f.isDirectory)) {
@@ -97,9 +100,26 @@ export async function createPlaylistAndPlay(files: Media[], file: Media) {
     .find((c) => c.name === file.name);
 
   if (item) {
-    await playPlaylistItem(item?.id);
+    return await playPlaylistItem(item?.id);
   } else {
     console.error("Unable to find item in playlist, using fallback");
-    await play(file.path);
+    return await play(file.path);
   }
+}
+
+export async function fullscreenCheck(max: number | undefined = 10) {
+  const status = await getStatus();
+
+  if (status.fullscreen === 0 && max > 0) {
+    await delay(100);
+    await fullscreenCheck(--max);
+  } else if (!status.fullscreen) {
+    await toggleFullscreen();
+  }
+}
+
+async function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
 }

@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import type { Media } from "../../domain/media";
 import type { StreamInfo, VlcMediaStatus } from "../../domain/vlc-media-status";
 import {
   createPlaylistAndPlay,
+  fullscreenCheck,
   next,
   pause,
   previous,
   resume,
   setAudio,
   setSubtitle,
-  toggleFullscreen,
 } from "../api/vlc-api";
 import { Seek } from "./Seek";
 import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { PopupComponent } from "./ui/PopupComponent";
-import type { Media } from "../../domain/media";
 
 export interface MediaControlPanelProps {
   status?: VlcMediaStatus;
@@ -34,12 +34,6 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
     (s) => streams[s].Type === "Subtitle"
   );
   const resumableFile = allFiles.find((f) => !f.isDirectory && f.viewProgress);
-
-  useEffect(() => {
-    if (status?.fullscreen === false && status?.state === "playing") {
-      toggleFullscreen().then();
-    }
-  }, [status]);
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 w-full h-28 bg-black flex flex-col">
@@ -162,6 +156,8 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
                   await createPlaylistAndPlay(props.allFiles, resumableFile);
                 }
               }
+
+              await fullscreenCheck();
             }}
           >
             <svg

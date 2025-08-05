@@ -1,3 +1,5 @@
+import type { Diff } from "deep-diff";
+
 export type StreamType = "Video" | "Audio" | "Subtitle";
 
 export interface BaseStream {
@@ -99,4 +101,9 @@ export interface VlcMediaStatus {
   repeat: boolean;
   loop: boolean;
   fullscreen: boolean | 0;
+}
+
+export interface TrackedVlcMediaStatus {
+  data: VlcMediaStatus;
+  changes?: Diff<VlcMediaStatus, VlcMediaStatus>[];
 }

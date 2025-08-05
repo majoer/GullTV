@@ -1,7 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery
+} from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import type { VlcMediaStatus } from "../../domain/vlc-media-status";
+import type { WebsocketEvent } from "../../domain/websocket";
 import { getMedia } from "../api/media-api";
 import { BreadcrumbsComponent } from "./Breadcrumbs";
 import { FileNavigator } from "./FileNavigator";
@@ -12,14 +14,14 @@ export const MatsflixComponent = () => {
 
   const {
     isPending,
-    data: mediaResponse,
+    data: initialMedia,
     error,
   } = useQuery({
     queryKey: ["media", location.pathname],
     queryFn: () => getMedia(location.pathname),
   });
 
-  const { lastJsonMessage: status } = useWebSocket<VlcMediaStatus>(
+  const { lastJsonMessage: event } = useWebSocket<WebsocketEvent>(
     `ws://${window.location.hostname}:3001`,
     {
       share: false,
@@ -30,8 +32,11 @@ export const MatsflixComponent = () => {
   if (error) return <>Error</>;
   if (isPending) return <>Loading ...</>;
 
-  const isPlaying = status?.state === "playing";
-  const playingFilename = status?.information?.category.meta.filename;
+  
+  const mediaResponse = event?.type === "media" ? event.data : initialMedia;
+  const status = event?.type === "status" ? event.data : undefined;
+  const isPlaying = status?.data?.state === "playing";
+  const playingFilename = status?.data?.information?.category.meta.filename;
 
   return (
     <div className="m-auto mb-28">
@@ -42,7 +47,7 @@ export const MatsflixComponent = () => {
         allFiles={mediaResponse.media}
       />
       <MediaControlPanel
-        status={status}
+        status={status?.data}
         disabled={!status}
         allFiles={mediaResponse.media}
       />

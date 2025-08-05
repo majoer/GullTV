@@ -9,7 +9,7 @@ export interface MediaService {
   getMedia: (folder: string) => Promise<MediaResponse>;
 }
 
-export const MediaService = (
+export const MediaFileService = (
   viewProgressService: ViewProgressService
 ): MediaService => ({
   getMedia: async (folder: string): Promise<MediaResponse> => {

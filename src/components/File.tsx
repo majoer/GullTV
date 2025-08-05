@@ -1,8 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import type { Media } from "../../domain/media";
-import {
-  createPlaylistAndPlay
-} from "../api/vlc-api";
+import { createPlaylistAndPlay, fullscreenCheck } from "../api/vlc-api";
 import { NavLinkComponent } from "./ui/NavLinkComponent";
 
 export interface FileProps {
@@ -15,18 +12,7 @@ export interface FileProps {
 export const File = (props: FileProps) => {
   const { isPlaying, file } = props;
   const fileIsLoaded = props.playingFilename === file.name;
-  const [leftOff, setLeftOff] = useState(
-    !file.isDirectory && file.viewProgress
-  );
-  const prevIsPlaying = useRef(isPlaying);
-
-  useEffect(() => {
-    if (prevIsPlaying.current !== isPlaying) {
-      setLeftOff(undefined);
-    }
-
-    prevIsPlaying.current = isPlaying;
-  }, [isPlaying]);
+  const leftOff = !file.isDirectory && file.viewProgress;
 
   return (
     <>
@@ -36,7 +22,10 @@ export const File = (props: FileProps) => {
         onClick={async (e) => {
           if (!props.file.isDirectory) {
             e.preventDefault();
+
             await createPlaylistAndPlay(props.allFiles, props.file);
+
+            await fullscreenCheck();
           }
         }}
       >
@@ -65,7 +54,11 @@ export const File = (props: FileProps) => {
               className={`absolute -right-1 top-1/2 -translate-y-1/2 ${
                 isPlaying && fileIsLoaded ? "animate-pulse" : ""
               } ${
-                leftOff || fileIsLoaded ? "fill-green-500" : "fill-orange-500"
+                fileIsLoaded
+                  ? "fill-green-500"
+                  : leftOff
+                  ? "fill-yellow-400"
+                  : "fill-orange-500"
               }`}
               xmlns="http://www.w3.org/2000/svg"
             >
