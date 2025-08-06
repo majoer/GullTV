@@ -26,7 +26,7 @@ export const BreadcrumbsComponent = () => {
       {parts.map((p, i) => (
         <NavLinkComponent key={p} to={parts.slice(0, i + 1).join("/")}>
           <span className="mx-1">/</span>
-          {p}
+          {decodeURIComponent(p)}
         </NavLinkComponent>
       ))}
     </div>

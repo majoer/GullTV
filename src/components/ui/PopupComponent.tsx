@@ -12,7 +12,7 @@ export const PopupComponent = (props: PopupComponentProps) => {
 
   return (
     <div
-      className="bg-white absolute bottom-full text-black p-2"
+      className="bg-sky-100 rounded-md absolute bottom-full text-black p-2"
       onClick={(e) => e.stopPropagation()}
     >
       {props.children}

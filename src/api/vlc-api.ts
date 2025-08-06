@@ -74,6 +74,15 @@ export async function setAudio(
     )
   ).json();
 }
+export async function setVolume(
+  value: string | number
+): Promise<VlcMediaStatus> {
+  return (
+    await fetch(
+      `/api/vlc/status.json?command=volume&val=${value}`
+    )
+  ).json();
+}
 export async function setSubtitle(
   value: string | number
 ): Promise<VlcMediaStatus> {

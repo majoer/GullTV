@@ -36,7 +36,7 @@ export const MatsflixComponent = () => {
   const playingFilename = status?.current?.information?.category.meta.filename;
 
   return (
-    <div className="m-auto mb-28">
+    <div className="m-auto mb-32">
       <BreadcrumbsComponent />
       <FileNavigator
         playingFilename={playingFilename}

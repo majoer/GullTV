@@ -8,12 +8,14 @@ import {
   pause,
   previous,
   resume,
+  seek,
   setAudio,
   setSubtitle,
+  setVolume,
 } from "../api/vlc-api";
-import { Seek } from "./Seek";
 import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { PopupComponent } from "./ui/PopupComponent";
+import { SliderComponent } from "./ui/SliderComponent";
 
 export interface MediaControlPanelProps {
   status?: VlcMediaStatus;
@@ -36,9 +38,26 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
   const resumableFile = allFiles.find((f) => !f.isDirectory && f.viewProgress);
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 w-full h-28 bg-black flex flex-col">
+    <footer className="fixed bottom-0 left-0 right-0 w-full h-32 bg-black flex flex-col">
       <div className="mx-3 text-center">
-        <Seek disabled={disabled} status={status}></Seek>
+        <SliderComponent
+          orientation="horizontal"
+          style="white"
+          value={(props.status?.position || 0) * (props.status?.length ?? 0)}
+          max={props.status?.length || 0}
+          onChange={async (v) => await seek(v)}
+          formatTitle={(seconds) => {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+
+            return [
+              hrs.toString().padStart(2, "0"),
+              mins.toString().padStart(2, "0"),
+              secs.toString().padStart(2, "0"),
+            ].join(":");
+          }}
+        />
         <div
           className="text-nowrap overflow-clip"
           title={category?.meta.filename || resumableFile?.name}
@@ -57,7 +76,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           }}
         >
           <svg
-            viewBox="0 0 24 24"
+            viewBox="-3 -3 30 30"
             fill="inherit"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -196,6 +215,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
         </MediaButtonComponent>
         <MediaButtonComponent
           disabled={disabled}
+          className="relative"
           aria-label="volume"
           onClick={() => setVolumeOpen(!volumeOpen)}
         >
@@ -212,7 +232,16 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             />
           </svg>
           <PopupComponent open={volumeOpen}>
-            <div></div>
+            <div className="h-34 w-6 flex justify-center">
+              <SliderComponent
+                orientation="vertical"
+                style="black"
+                value={props.status?.volume || 0}
+                max={320}
+                onChange={async (v) => await setVolume(v)}
+                formatTitle={(v) => `${Math.round(100 * (v / 320))}`}
+              />
+            </div>
           </PopupComponent>
         </MediaButtonComponent>
       </div>

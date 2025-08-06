@@ -3,7 +3,7 @@ import path from "path";
 import { DirectoryMedia, FileMedia, MediaResponse } from "../../domain/media";
 import { ViewProgressService } from "./view-progress-service";
 
-const rootDir = process.env.MEDIA_DIRECTORY || "/home/mats/media";
+const rootDir = process.env.MEDIA_DIRECTORY || "/mnt/gullstore/media";
 
 export interface MediaService {
   getMedia: (folder: string) => Promise<MediaResponse>;
