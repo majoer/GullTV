@@ -5,6 +5,11 @@ REMOTE_USER="matsj"
 REMOTE_HOST="192.168.10.191"
 REMOTE_DIR="/home/matsj/matsflix"
 
+if [ "$1" = "clean" ]; then
+  echo "Removing tmp files"
+  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm /tmp/matsflix*"
+fi
+
 echo "Stopping service..."
 ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user stop ${APP_NAME}" || true
 

@@ -4,6 +4,7 @@ import { StatusWebsocketEvent, WebsocketEvent } from "../../domain/websocket";
 import { ViewProgressService } from "./view-progress-service";
 import { getPlaylistItem } from "./vlc-http-service";
 import { VlcObserver } from "./vlc-observer";
+import { relativeMediaRoot } from "./media-file-service";
 
 export const createEventEmitter = (
   viewProgressService: ViewProgressService
@@ -13,9 +14,11 @@ export const createEventEmitter = (
 
     if (status.current?.state === "playing" && filename) {
       const item = await getPlaylistItem(filename);
-      const parentFolder = item?.uri.split("/").slice(2, -1).join("/");
-      if (parentFolder) {
-        viewProgressService.saveProgress(decodeURIComponent(parentFolder), {
+      const absoluteUri = item?.uri.split("/").slice(2, -1).join("/");
+      if (absoluteUri) {
+        const relativeUri = relativeMediaRoot(absoluteUri);
+
+        viewProgressService.saveProgress(decodeURIComponent(relativeUri), {
           position: status.current.position,
           filename: filename,
         });

@@ -2,12 +2,17 @@ import axios, { AxiosResponse } from "axios";
 import { VlcPlaylist, VlcPlaylistItem } from "../../domain/vlc-playlist";
 import { logger } from "../logger";
 import chalk from "chalk";
+import { MEDIA_ROOT } from "./media-file-service";
 
 export const vlcTarget = "http://localhost:8080";
 
 export const runVlcCommand = async <T>(
   operation: string
 ): Promise<AxiosResponse<T>> => {
+  operation = operation
+    .replace("in_enqueue&input=", `in_enqueue&input=${MEDIA_ROOT}/`)
+    .replace("in_play&id=", `in_play&id=${MEDIA_ROOT}/`);
+
   const url = `${vlcTarget}/requests/${operation}`;
 
   logger.debug(chalk.gray(`GET ${url}`));

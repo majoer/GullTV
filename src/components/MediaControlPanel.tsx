@@ -1,6 +1,7 @@
 import { useState } from "react";
-import type { Media } from "../../domain/media";
+import type { BaseMedia } from "../../domain/media";
 import type { StreamInfo, VlcMediaStatus } from "../../domain/vlc-media-status";
+import { getMedia } from "../api/media-api";
 import {
   createPlaylistAndPlay,
   fullscreenCheck,
@@ -20,11 +21,11 @@ import { SliderComponent } from "./ui/SliderComponent";
 export interface MediaControlPanelProps {
   status?: VlcMediaStatus;
   disabled: boolean;
-  allFiles: Media[];
+  lastWatched?: BaseMedia;
 }
 
 export const MediaControlPanel = (props: MediaControlPanelProps) => {
-  const { status, disabled, allFiles } = props;
+  const { status, disabled, lastWatched } = props;
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
 
@@ -35,10 +36,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
   const subtitleStreams = allStreams.filter(
     (s) => streams[s].Type === "Subtitle"
   );
-  const resumableFile = allFiles.find((f) => !f.isDirectory && f.viewProgress);
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 w-full h-32 bg-black flex flex-col">
+    <footer className="fixed bottom-0 left-0 right-0 w-full h-32 bg-black flex flex-col justify-between">
       <div className="mx-3 text-center">
         <SliderComponent
           orientation="horizontal"
@@ -60,9 +60,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
         />
         <div
           className="text-nowrap overflow-clip"
-          title={category?.meta.filename || resumableFile?.name}
+          title={category?.meta.filename || lastWatched?.name}
         >
-          {category?.meta.filename || resumableFile?.name}
+          {category?.meta.filename || lastWatched?.name}
         </div>
       </div>
 
@@ -171,8 +171,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
               if (status?.information) {
                 await resume();
               } else {
-                if (resumableFile) {
-                  await createPlaylistAndPlay(props.allFiles, resumableFile);
+                if (lastWatched) {
+                  const media = await getMedia(lastWatched.parent)
+                  await createPlaylistAndPlay(media.media, lastWatched);
                 }
               }
 

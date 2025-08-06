@@ -1,12 +1,11 @@
-
 export interface MediaResponse {
   media: Media[];
+  lastWatched?: BaseMedia;
 }
 
 export interface BaseMedia {
   name: string;
   path: string;
-  parentPath: string;
   parent: string;
   isDirectory: boolean;
 }

@@ -3,35 +3,39 @@ import path from "path";
 import { DirectoryMedia, FileMedia, MediaResponse } from "../../domain/media";
 import { ViewProgressService } from "./view-progress-service";
 
-const rootDir = process.env.MEDIA_DIRECTORY || "/mnt/gullstore/media";
+export const MEDIA_ROOT = process.env.MEDIA_DIRECTORY || "/mnt/gullstore/media";
 
 export interface MediaService {
   getMedia: (folder: string) => Promise<MediaResponse>;
+}
+
+export function relativeMediaRoot(absolutePath: string) {
+  return absolutePath.replace(MEDIA_ROOT + "/", "");
 }
 
 export const MediaFileService = (
   viewProgressService: ViewProgressService
 ): MediaService => ({
   getMedia: async (folder: string): Promise<MediaResponse> => {
-    const folderPath = path.join(rootDir, folder);
+    const folderPath = path.join(MEDIA_ROOT, folder);
 
     const dir = await fs.readdir(folderPath, {
       recursive: false,
       withFileTypes: true,
     });
 
-    const progress = viewProgressService.getProgress()[folderPath];
+    const { progressMap, lastWatched } = viewProgressService.getProgressState();
+    const progress = progressMap[relativeMediaRoot(folderPath)];
 
     const media = dir.map((file) => {
-      const parent = file.parentPath.replace(rootDir + "/", "");
-      const path = `${rootDir}/${parent}/${file.name}`;
+      const relativeParent = relativeMediaRoot(file.parentPath);
+      const relativePath = path.join(relativeParent, file.name);
 
       if (file.isDirectory()) {
         const media: DirectoryMedia = {
           name: file.name,
-          parent,
-          path,
-          parentPath: file.parentPath,
+          path: relativePath,
+          parent: relativeParent,
           isDirectory: true,
         };
 
@@ -39,9 +43,8 @@ export const MediaFileService = (
       } else {
         const media: FileMedia = {
           name: file.name,
-          path,
-          parent,
-          parentPath: file.parentPath,
+          path: relativePath,
+          parent: relativeParent,
           isDirectory: false,
           viewProgress:
             progress?.filename === file.name ? progress.position : undefined,
@@ -63,6 +66,7 @@ export const MediaFileService = (
 
     return {
       media,
+      lastWatched,
     };
   },
 });

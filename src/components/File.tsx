@@ -19,7 +19,7 @@ export const File = (props: FileProps) => {
     <>
       <NavLinkComponent
         className={`relative m-2 p-2 bg-gray-800 rounded-md overflow-clip`}
-        to={`${props.file.parent}/${props.file.name}`}
+        to={file.path}
         onClick={async (e) => {
           if (!props.file.isDirectory) {
             e.preventDefault();

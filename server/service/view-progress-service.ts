@@ -4,7 +4,7 @@ import { ViewProgress, ViewProgressFile } from "../../domain/progress";
 const progressFilePath = "/tmp/matsflix-view-progress.json";
 
 export interface ViewProgressService {
-  getProgress: () => ViewProgress;
+  getProgressState: () => ViewProgress;
   saveProgress: (
     parentPath: string,
     viewProgress: ViewProgressFile
@@ -12,26 +12,36 @@ export interface ViewProgressService {
 }
 
 export const ViewProgressService = (): ViewProgressService => {
-  const cache: ViewProgress = readProgress();
+  let progress: ViewProgress = readProgress();
 
   return {
-    getProgress: (): ViewProgress => {
-      return cache;
+    getProgressState: (): ViewProgress => {
+      return progress;
     },
     saveProgress: async (
-      parentPath: string,
+      relativeParentPath: string,
       viewProgress: ViewProgressFile
     ) => {
-      cache[parentPath] = viewProgress;
-      fs.writeFileSync(progressFilePath, JSON.stringify(cache));
+      progress.lastWatched = {
+        name: viewProgress.filename,
+        path: `${relativeParentPath}/${viewProgress.filename}`,
+        parent: relativeParentPath,
+        isDirectory: false,
+      };
+      progress.progressMap[relativeParentPath] = viewProgress;
+      fs.writeFileSync(progressFilePath, JSON.stringify(progress));
     },
   };
 };
 
 function readProgress(): ViewProgress {
   try {
-    return JSON.parse(fs.readFileSync(progressFilePath, "utf-8"));
+    const progress = JSON.parse(fs.readFileSync(progressFilePath, "utf-8"));
+    return progress;
   } catch (_) {
-    return {};
+    return {
+      lastWatched: undefined,
+      progressMap: {},
+    };
   }
 }

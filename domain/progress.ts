@@ -1,5 +1,8 @@
+import type { BaseMedia } from "./media";
+
 export interface ViewProgress {
-  [key: string]: ViewProgressFile;
+  lastWatched?: BaseMedia;
+  progressMap: { [key: string]: ViewProgressFile };
 }
 
 export interface ViewProgressFile {

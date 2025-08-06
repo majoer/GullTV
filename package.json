@@ -6,6 +6,7 @@
     "start:vlc": "ts-node --project tsconfig.express.json server/run-dev-vlc.ts",
     "start": "NODE_ENV=production node dist/server/server.js",
     "deploy": "npm run build && sh deploy.sh",
+    "deploy:clean": "npm run build && sh deploy.sh clean",
     "dev": "concurrently --prefix none 'npm run dev:server' 'npm run dev:frontend' 'npm run start:vlc'",
     "dev:server": "nodemon --watch server --ext .ts --exec 'ts-node --project tsconfig.express.json server/server.ts'",
     "dev:frontend": "vite",

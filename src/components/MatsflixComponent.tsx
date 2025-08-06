@@ -46,7 +46,7 @@ export const MatsflixComponent = () => {
       <MediaControlPanel
         status={status?.current}
         disabled={!status}
-        allFiles={mediaResponse.media}
+        lastWatched={mediaResponse.lastWatched}
       />
     </div>
   );
