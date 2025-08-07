@@ -7,7 +7,7 @@ REMOTE_DIR="/home/matsj/matsflix"
 
 if [ "$1" = "clean" ]; then
   echo "Removing tmp files"
-  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm /tmp/matsflix*"
+  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm /tmp/matsflix*" || true
 fi
 
 echo "Stopping service..."
