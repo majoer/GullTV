@@ -17,6 +17,7 @@ import {
 import { MediaButtonComponent } from "./ui/MediaButtonComponent";
 import { PopupComponent } from "./ui/PopupComponent";
 import { SliderComponent } from "./ui/SliderComponent";
+import { useNavigate } from "react-router-dom";
 
 export interface MediaControlPanelProps {
   status?: VlcMediaStatus;
@@ -28,6 +29,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
   const { status, disabled, lastWatched } = props;
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
+  const navigate = useNavigate();
 
   const category = props.status?.information?.category;
   const { meta: _, ...streams } = category || ({} as StreamInfo);
@@ -126,6 +128,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           disabled={disabled}
           aria-label="previous"
           onClick={async () => {
+            if (lastWatched) navigate(lastWatched.parent);
             await previous();
           }}
         >
@@ -147,6 +150,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             aria-label="pause"
             disabled={disabled}
             onClick={async () => {
+              if (lastWatched) navigate(lastWatched.parent);
               await pause();
             }}
           >
@@ -168,13 +172,14 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             aria-label="resume"
             disabled={disabled}
             onClick={async () => {
+              if (lastWatched) navigate(lastWatched.parent);
+
               if (status?.information) {
                 await resume();
-              } else {
-                if (lastWatched) {
-                  const media = await getMedia(lastWatched.parent)
-                  await createPlaylistAndPlay(media.media, lastWatched);
-                }
+              } else if (lastWatched) {
+                navigate(lastWatched.parent);
+                const media = await getMedia(lastWatched.parent);
+                await createPlaylistAndPlay(media.media, lastWatched);
               }
 
               await fullscreenCheck();
@@ -198,6 +203,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           disabled={disabled}
           aria-label="next"
           onClick={async () => {
+            if (lastWatched) navigate(lastWatched.parent);
             await next();
           }}
         >
