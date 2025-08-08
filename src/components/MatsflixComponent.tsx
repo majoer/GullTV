@@ -28,7 +28,6 @@ export const MatsflixComponent = () => {
   );
 
   if (error) return <>Error</>;
-  if (isPending) return <>Loading ...</>;
 
   const mediaResponse = event?.type === "media" ? event.data : initialMedia;
   const status = event?.type === "status" ? event.data : undefined;
@@ -39,14 +38,15 @@ export const MatsflixComponent = () => {
     <div className="m-auto mb-32">
       <BreadcrumbsComponent />
       <FileNavigator
+        isPending={isPending}
         playingFilename={playingFilename}
         isPlaying={isPlaying}
-        allFiles={mediaResponse.media}
+        allFiles={mediaResponse?.media ?? []}
       />
       <MediaControlPanel
         status={status?.current}
         disabled={!status}
-        lastWatched={mediaResponse.lastWatched}
+        lastWatched={mediaResponse?.lastWatched}
       />
     </div>
   );
