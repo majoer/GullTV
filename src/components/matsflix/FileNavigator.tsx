@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Media } from "../../domain/media";
+import type { Media } from "../../../domain/media";
 import { File } from "./File";
 
 export interface FileNavigatorProps {

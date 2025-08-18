@@ -1,13 +1,13 @@
 set -e
 
-APP_NAME="Matsflix"
+APP_NAME="GullTV"
 REMOTE_USER="matsj"
 REMOTE_HOST="192.168.10.191"
-REMOTE_DIR="/home/matsj/matsflix"
+REMOTE_DIR="/home/matsj/gulltv"
 
 if [ "$1" = "clean" ]; then
   echo "Removing tmp files"
-  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm /tmp/matsflix*" || true
+  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm /tmp/gulltv*" || true
 fi
 
 echo "Stopping service..."
@@ -20,8 +20,8 @@ rsync -az --delete ./package.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete ./package-lock.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete --chmod=744 ./nvm-start.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 
-echo "Updating Matsflix service .."
-rsync -az --delete ./Matsflix.service ${REMOTE_USER}@${REMOTE_HOST}:/tmp/${APP_NAME}.service
+echo "Updating GullTV service .."
+rsync -az --delete ./GullTV.service ${REMOTE_USER}@${REMOTE_HOST}:/tmp/${APP_NAME}.service
 ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo mv /tmp/${APP_NAME}.service /etc/systemd/user/"
 ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user daemon-reload"
 ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user enable ${APP_NAME}"
@@ -29,7 +29,7 @@ ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user enable ${APP_NAME}"
 echo "Installing dependencies..."
 ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_DIR}; source ~/.nvm/nvm.sh; npm i -g npm; npm install"
 
-echo "Starting Matsflix service..."
+echo "Starting GullTV service..."
 ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user restart ${APP_NAME}"
 
 ssh ${REMOTE_USER}@${REMOTE_HOST} "journalctl --user-unit ${APP_NAME}.service -f"

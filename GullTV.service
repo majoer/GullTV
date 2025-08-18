@@ -8,7 +8,6 @@ WorkingDirectory=/home/matsj/matsflix
 Restart=always
 Environment=NODE_ENV=production
 Environment=MEDIA_DIRECTORY=/mnt/media/media
-Environment=AUTORUN_VLC=true
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=myapp

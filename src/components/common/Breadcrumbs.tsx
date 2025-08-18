@@ -1,9 +1,10 @@
 import { useLocation } from "react-router";
-import { NavLinkComponent } from "./ui/NavLinkComponent";
+import { NavLinkComponent } from "../ui/NavLinkComponent";
 
 export const BreadcrumbsComponent = () => {
   const location = useLocation();
-  const parts = location.pathname === '/' ? [] : location.pathname.split("/").slice(1);
+  const parts =
+    location.pathname === "/" ? [] : location.pathname.split("/").slice(1);
 
   return (
     <div className="flex mx-2 mt-1 mb-1">
@@ -24,7 +25,7 @@ export const BreadcrumbsComponent = () => {
         </svg>
       </NavLinkComponent>
       {parts.map((p, i) => (
-        <NavLinkComponent key={p} to={parts.slice(0, i + 1).join("/")}>
+        <NavLinkComponent key={p} to={`/${parts.slice(0, i + 1).join("/")}`}>
           <span className="mx-1">/</span>
           {decodeURIComponent(p)}
         </NavLinkComponent>

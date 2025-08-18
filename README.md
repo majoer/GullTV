@@ -8,8 +8,13 @@ Matsflix is a service you can run on a small TV-computer. It's been tested on a 
 
 It runs a website you can access on your LAN. From the website, everyone in your home can remote-control VLC.
 
-## Prerequisites 
+## Prerequisites
+
 - VLC installed
 - Nodejs installed
 - A media folder acceessible to the service (can be a network drive)
 - Firewall allows traffic
+
+## Useful docs
+
+- https://github.com/videolan/vlc/blob/master/share/lua/http/requests/README.txt

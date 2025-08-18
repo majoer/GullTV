@@ -21,7 +21,6 @@ export const SliderComponent = (props: SliderComponentProps) => {
   const lastUpdated = useRef(Date.now());
   const position = (100 * (internalValue || 0)) / max;
   const horizontal = orientation === "horizontal";
-
   const debounced = useDebouncedCallback(props.onChange, 300);
   const onChange = useCallback((newValue: number) => {
     setInternalValue(newValue);
@@ -38,7 +37,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
 
       return Math.round(ratio * max);
     },
-    []
+    [max]
   );
 
   const calculateDragValue = useCallback(
@@ -54,7 +53,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
 
       return Math.max(0, Math.min(Math.round(value), max));
     },
-    []
+    [max]
   );
 
   useEffect(() => {

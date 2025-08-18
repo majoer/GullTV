@@ -1,6 +1,6 @@
-import type { Media } from "../../domain/media";
-import { createPlaylistAndPlay, fullscreenCheck } from "../api/vlc-api";
-import { NavLinkComponent } from "./ui/NavLinkComponent";
+import type { Media } from "../../../domain/media";
+import { VlcApi } from "../../api/vlc-api";
+import { NavLinkComponent } from "../ui/NavLinkComponent";
 
 export interface FileProps {
   file: Media;
@@ -19,14 +19,13 @@ export const File = (props: FileProps) => {
     <>
       <NavLinkComponent
         className={`relative m-2 p-2 bg-gray-800 rounded-md overflow-clip`}
-        to={file.path}
+        to={`/matsflix/${file.path}`}
         onClick={async (e) => {
           if (!props.file.isDirectory) {
             e.preventDefault();
 
-            await createPlaylistAndPlay(props.allFiles, props.file);
-
-            await fullscreenCheck();
+            await VlcApi.createPlaylistAndPlay(props.allFiles, props.file);
+            await VlcApi.fullscreenCheck();
           }
         }}
       >

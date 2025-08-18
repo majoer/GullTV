@@ -1,5 +1,5 @@
 {
-  "name": "matsflix-web",
+  "name": "gulltv",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node dist/server/server.js",
     "deploy": "npm run build && sh deploy.sh",
     "deploy:clean": "npm run build && sh deploy.sh clean",
-    "dev": "concurrently --prefix none 'npm run dev:server' 'npm run dev:frontend' 'npm run start:vlc'",
+    "dev": "concurrently --prefix none 'npm run dev:server' 'npm run dev:frontend'",
     "dev:server": "nodemon --watch server --ext .ts --exec 'ts-node --project tsconfig.express.json server/server.ts'",
     "dev:frontend": "vite",
     "build": "tsc -b && vite build",
@@ -18,6 +18,8 @@
     "axios": "^1.11.0",
     "chalk": "^5.5.0",
     "express": "^5.1.0",
+    "puppeteer": "^24.16.0",
+    "rxjs": "^7.8.2",
     "ws": "^8.18.3"
   },
   "devDependencies": {
@@ -27,6 +29,7 @@
     "@types/express": "^5.0.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "@types/selenium-webdriver": "^4.1.28",
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^4.6.0",
     "concurrently": "^9.2.0",
@@ -39,7 +42,6 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.7.1",
     "react-use-websocket": "^4.13.0",
-    "rxjs": "^7.8.2",
     "tailwindcss": "^4.1.11",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
@@ -47,7 +49,6 @@
     "use-debounce": "^10.0.5",
     "vite": "^7.0.4",
     "vite-plugin-node": "^7.0.0",
-    "vlc-client": "^1.1.1",
     "winston": "^3.17.0"
   }
 }

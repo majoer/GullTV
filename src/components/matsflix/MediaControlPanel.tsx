@@ -1,43 +1,44 @@
 import { useState } from "react";
-import type { BaseMedia } from "../../domain/media";
-import type { StreamInfo, VlcMediaStatus } from "../../domain/vlc-media-status";
-import { getMedia } from "../api/media-api";
-import {
-  createPlaylistAndPlay,
-  fullscreenCheck,
-  next,
-  pause,
-  previous,
-  resume,
-  seek,
-  setAudio,
-  setSubtitle,
-  setVolume,
-} from "../api/vlc-api";
-import { MediaButtonComponent } from "./ui/MediaButtonComponent";
-import { PopupComponent } from "./ui/PopupComponent";
-import { SliderComponent } from "./ui/SliderComponent";
-import { useNavigate } from "react-router-dom";
+import { MediaButtonComponent } from "../ui/MediaButtonComponent";
+import { PopupComponent } from "../ui/PopupComponent";
+import { SliderComponent } from "../ui/SliderComponent";
+
+export interface MediaControlStatus {
+  position: number;
+}
 
 export interface MediaControlPanelProps {
-  status?: VlcMediaStatus;
   disabled: boolean;
-  lastWatched?: BaseMedia;
+  time: number;
+  length: number;
+  volume: number;
+  title: string;
+  state?: "playing" | "stopped" | "paused";
+  audioTracks?: { label: string; id: string }[];
+  subtitles?: { label: string; id: string }[];
+  onSetVolume: (volume: number) => void;
+  onNext: () => void;
+  onPrev: () => void;
+  onPlay: () => void;
+  onPause: () => void;
+  onSeek: (value: number) => void;
+  onSetSubtitle: (language: string) => void;
+  onSetAudioTrack: (track: string) => void;
 }
 
 export const MediaControlPanel = (props: MediaControlPanelProps) => {
-  const { status, disabled, lastWatched } = props;
+  const {
+    time,
+    length,
+    title,
+    disabled,
+    state,
+    volume,
+    subtitles = [],
+    audioTracks = [],
+  } = props;
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const category = props.status?.information?.category;
-  const { meta: _, ...streams } = category || ({} as StreamInfo);
-  const allStreams = Object.keys(streams);
-  const audioStreams = allStreams.filter((s) => streams[s].Type === "Audio");
-  const subtitleStreams = allStreams.filter(
-    (s) => streams[s].Type === "Subtitle"
-  );
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 w-full h-32 bg-black flex flex-col justify-between">
@@ -45,9 +46,9 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
         <SliderComponent
           orientation="horizontal"
           style="white"
-          value={(props.status?.position || 0) * (props.status?.length ?? 0)}
-          max={props.status?.length || 0}
-          onChange={async (v) => await seek(v)}
+          value={time}
+          max={length}
+          onChange={async (v) => props.onSeek(v)}
           formatTitle={(seconds) => {
             const hrs = Math.floor(seconds / 3600);
             const mins = Math.floor((seconds % 3600) / 60);
@@ -60,11 +61,8 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             ].join(":");
           }}
         />
-        <div
-          className="text-nowrap overflow-clip"
-          title={category?.meta.filename || lastWatched?.name}
-        >
-          {category?.meta.filename || lastWatched?.name}
+        <div className="text-nowrap overflow-clip" title={title}>
+          {title}
         </div>
       </div>
 
@@ -94,30 +92,26 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
               <label htmlFor="subtitle">Subtitle: </label>
               <select
                 id="subtitle"
-                disabled={subtitleStreams.length === 0}
+                disabled={subtitles.length === 0}
                 onChange={async (e) => {
-                  await setSubtitle(e.currentTarget.value);
+                  props.onSetSubtitle(e.currentTarget.value);
                 }}
               >
-                {subtitleStreams.map((s) => (
-                  <option value={s.replace("Stream ", "")}>
-                    {streams[s].Language}
-                  </option>
+                {subtitles.map((s) => (
+                  <option value={s.id}>{s.label}</option>
                 ))}
               </select>
 
               <label htmlFor="audio">Audio: </label>
               <select
                 id="audio"
-                disabled={audioStreams.length === 0}
+                disabled={audioTracks.length === 0}
                 onChange={async (e) => {
-                  await setAudio(e.target.value);
+                  props.onSetAudioTrack(e.target.value);
                 }}
               >
-                {audioStreams.map((s) => (
-                  <option value={s.replace("Stream ", "")}>
-                    {streams[s].Language}
-                  </option>
+                {audioTracks.map((s) => (
+                  <option value={s.id}>{s.label}</option>
                 ))}
               </select>
             </div>
@@ -128,8 +122,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           disabled={disabled}
           aria-label="previous"
           onClick={async () => {
-            if (lastWatched) navigate(lastWatched.parent);
-            await previous();
+            props.onPrev();
           }}
         >
           <svg
@@ -145,13 +138,12 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
             />
           </svg>
         </MediaButtonComponent>
-        {status?.state === "playing" ? (
+        {state === "playing" ? (
           <MediaButtonComponent
             aria-label="pause"
             disabled={disabled}
             onClick={async () => {
-              if (lastWatched) navigate(lastWatched.parent);
-              await pause();
+              props.onPause();
             }}
           >
             <svg
@@ -169,20 +161,10 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           </MediaButtonComponent>
         ) : (
           <MediaButtonComponent
-            aria-label="resume"
+            aria-label="Play"
             disabled={disabled}
             onClick={async () => {
-              if (lastWatched) navigate(lastWatched.parent);
-
-              if (status?.information) {
-                await resume();
-              } else if (lastWatched) {
-                navigate(lastWatched.parent);
-                const media = await getMedia(lastWatched.parent);
-                await createPlaylistAndPlay(media.media, lastWatched);
-              }
-
-              await fullscreenCheck();
+              props.onPlay();
             }}
           >
             <svg
@@ -203,8 +185,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           disabled={disabled}
           aria-label="next"
           onClick={async () => {
-            if (lastWatched) navigate(lastWatched.parent);
-            await next();
+            props.onNext();
           }}
         >
           <svg
@@ -243,9 +224,11 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
               <SliderComponent
                 orientation="vertical"
                 style="black"
-                value={props.status?.volume || 0}
+                value={volume}
                 max={320}
-                onChange={async (v) => await setVolume(v)}
+                onChange={async (v) => {
+                  props.onSetVolume(v);
+                }}
                 formatTitle={(v) => `${Math.round(100 * (v / 320))}`}
               />
             </div>

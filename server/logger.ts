@@ -15,7 +15,7 @@ export const logger = winston.createLogger({
 });
 
 export const vlcLogger = winston.createLogger({
-  level: "error",
+  level: "debug",
   format,
   transports: [new winston.transports.Console()],
 });
