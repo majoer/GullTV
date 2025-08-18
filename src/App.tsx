@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { MatsflixComponent } from "./components/matsflix/MatsflixComponent";
-import { GullTVComponent } from "./components/common/GullTVComponent";
-import { MatsTubeComponent } from "./components/matstube/MatsTubeComponent";
 import { BreadcrumbsComponent } from "./components/common/Breadcrumbs";
+import { GullTVComponent } from "./components/common/GullTVComponent";
+import { MatsflixComponent } from "./components/matsflix/MatsflixComponent";
+import { NoobTubeComponent } from "./components/noobtube/NoobTubeComponent";
 
 const queryClient = new QueryClient();
 function App() {
@@ -15,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<GullTVComponent />}></Route>
             <Route path="/matsflix*" element={<MatsflixComponent />}></Route>
-            <Route path="/matstube" element={<MatsTubeComponent />}></Route>
+            <Route path="/noobtube" element={<NoobTubeComponent />}></Route>
           </Routes>
         </div>
       </BrowserRouter>

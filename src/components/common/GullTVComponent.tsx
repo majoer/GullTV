@@ -6,8 +6,8 @@ const apps = [
     name: "Matsflix",
   },
   {
-    path: "/matstube",
-    name: "MatsTube",
+    path: "/noobtube",
+    name: "NoobTube",
   },
 ];
 

@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { YouTube } from "../../api/youtube-api";
-import { MediaControlPanel } from "../matsflix/MediaControlPanel";
 import useWebSocket from "react-use-websocket";
 import type { WebsocketEvent } from "../../../domain/websocket";
-import type { YoutubePlayCommand } from "../../../domain/youtube";
+import { YouTube } from "../../api/youtube-api";
+import { MediaControlPanel } from "../matsflix/MediaControlPanel";
 
-export const MatsTubeComponent = () => {
+export const NoobTubeComponent = () => {
   const [query, setQuery] = useState("heste");
   const { isPending, data, error } = useQuery({
     queryKey: ["youtube", query],
