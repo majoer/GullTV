@@ -4,6 +4,7 @@ import { YouTube } from "../../api/youtube-api";
 import { MediaControlPanel } from "../matsflix/MediaControlPanel";
 import useWebSocket from "react-use-websocket";
 import type { WebsocketEvent } from "../../../domain/websocket";
+import type { YoutubePlayCommand } from "../../../domain/youtube";
 
 export const MatsTubeComponent = () => {
   const [query, setQuery] = useState("heste");
@@ -60,7 +61,13 @@ export const MatsTubeComponent = () => {
             <img
               src={i.snippet.thumbnails.medium.url}
               className="rounded-md w-full"
-              onClick={async () => await YouTube.play(i.id.videoId)}
+              onClick={async () =>
+                await YouTube.runCommand({
+                  action: "play",
+                  hasPayload: true,
+                  data: i.id.videoId,
+                })
+              }
             ></img>
             <div className="p-2">{i.snippet.title}</div>
           </div>
@@ -72,16 +79,33 @@ export const MatsTubeComponent = () => {
         length={status?.duration || 0}
         title={status?.title || ""}
         state={status?.state}
-        volume={status?.volume || 0}
+        volume={status?.volume ? status.volume * 100 : 0}
+        muted={status?.muted || false}
         disabled={false}
-        onNext={() => {}}
-        onPrev={() => {}}
-        onPause={() => {}}
-        onPlay={() => {}}
-        onSeek={() => {}}
-        onSetAudioTrack={() => {}}
-        onSetSubtitle={() => {}}
-        onSetVolume={() => {}}
+        onNext={async () => {
+          await YouTube.runCommand({ action: "next", hasPayload: false });
+        }}
+        onPrev={async () => {
+          await YouTube.runCommand({ action: "prev", hasPayload: false });
+        }}
+        onPause={async () => {
+          await YouTube.runCommand({ action: "pause", hasPayload: false });
+        }}
+        onPlay={async () => {
+          await YouTube.runCommand({ action: "resume", hasPayload: false });
+        }}
+        onSeek={async (data) => {
+          await YouTube.runCommand({ action: "seek", hasPayload: true, data });
+        }}
+        onSetAudioTrack={async () => {}}
+        onSetSubtitle={async () => {}}
+        onSetVolume={async (data) => {
+          await YouTube.runCommand({
+            action: "setVolume",
+            hasPayload: true,
+            data: data / 100,
+          });
+        }}
       />
     </div>
   );

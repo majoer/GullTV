@@ -67,7 +67,8 @@ export const MatsflixComponent = () => {
         state={vlcStatus?.current.state}
         time={vlcStatus?.current.time || 0}
         length={vlcStatus?.current.length || 0}
-        volume={vlcStatus?.current.volume || 0}
+        volume={vlcStatus?.current.volume ? vlcStatus.current.volume / 320 : 0}
+        muted={false}
         title={category?.meta.filename || lastWatched?.name || ""}
         audioTracks={audioStreams}
         subtitles={subtitleStreams}

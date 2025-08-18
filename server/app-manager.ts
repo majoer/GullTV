@@ -1,12 +1,13 @@
 import { AxiosResponse } from "axios";
 import { WebSocketServer } from "ws";
 import { VlcMediaStatus } from "../domain/vlc-media-status";
+import { YoutubeCommand } from "../domain/youtube";
 import { VlcApp } from "./apps/vlc-app";
-import { YouTubeApp, YoutubeCommand } from "./apps/youtube-app";
+import { YouTubeApp } from "./apps/youtube-app";
+import { GullTvInstaller } from "./installer/gulltv-installer";
 import { BrowserService } from "./service/browser-service";
 import { MediaFileService } from "./service/media-web-service";
 import { ViewProgressService } from "./service/view-progress-service";
-import { GullTvInstaller } from "./installer/gulltv-installer";
 
 export type AppType = "vlc" | "youtube";
 

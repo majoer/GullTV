@@ -5,6 +5,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { AppManager } from "./app-manager";
 import { logger } from "./logger";
 import { GullTvInstaller } from "./installer/gulltv-installer";
+import { YoutubeAction } from "../domain/youtube";
 
 const port = 3000;
 const wsPort = 3001;
@@ -61,22 +62,26 @@ app.get("/api/youtube/search", (req, res) => {
     });
 });
 
-app.get("/api/youtube/play", (req, res) => {
+app.get("/api/youtube/command", (req, res) => {
   logger.debug(chalk.cyan(`GET ${req.url}`));
-  const id: string = req.query["id"] as string;
+  const action: YoutubeAction = req.query["action"] as YoutubeAction;
+  const data: any = req.query["data"]
+    ? parsePrimitive(req.query["data"] as string)
+    : undefined;
 
-  if (!id) {
-    logger.error("Missing youtube ID");
+  if (!action) {
+    logger.error("Missing youtube Action");
     res.status(404);
-  } else {
-    appManager
-      .onYoutubeCommand({ action: "play", data: id })
-      .then(() => res.status(200).json())
-      .catch((e) => {
-        logger.error(e);
-        res.status(500).json({});
-      });
+    return;
   }
+
+  appManager
+    .onYoutubeCommand({ action, data, hasPayload: data!! })
+    .then(() => res.status(200).json())
+    .catch((e) => {
+      logger.error(e);
+      res.status(500).json({});
+    });
 });
 
 app.use(express.static("dist/client"));
@@ -97,3 +102,14 @@ process.on("SIGUSR2", () => {
   server.close();
   wss.close();
 });
+
+function parsePrimitive(str: string): any {
+  if (str === "null") return null;
+  if (str === "undefined") return undefined;
+  if (str === "true") return true;
+  if (str === "false") return false;
+
+  if (!isNaN(Number(str)) && str.trim() !== "") return Number(str);
+
+  return str;
+}

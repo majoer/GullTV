@@ -14,27 +14,23 @@ import {
   YoutubeStatusWebsocketEvent,
 } from "../../domain/websocket";
 import {
+  YoutubeCommand,
   YoutubePlayerStatus,
   YoutubeSearchResponse,
 } from "../../domain/youtube";
 import { BaseApp } from "../app-manager";
+import { Env } from "../environment";
 import { logger } from "../logger";
 import { Keyboard } from "../os/keyboard";
 import { Program } from "../os/program";
 import { BrowserService } from "../service/browser-service";
 import { WebSocketComs } from "../service/web-socket-coms";
-import { Env } from "../environment";
 
 export interface YouTubeApp extends BaseApp {
   type: "youtube";
   search: (query: string) => Promise<YoutubeSearchResponse>;
   runCommand: (command: YoutubeCommand) => Promise<void>;
 }
-
-export type YoutubeCommand = {
-  action: "play";
-  data: string;
-};
 
 export const YouTubeApp = (
   wss: WebSocketServer,
@@ -60,11 +56,11 @@ export const YouTubeApp = (
       }
     },
     runCommand: async (command: YoutubeCommand) => {
+      const page = browserService.getPage();
+
       switch (command.action) {
         case "play":
-          const page = browserService.getPage();
-
-          logger.debug(`Playing video ${command.data}`);
+          logger.debug(`Starting video ${JSON.stringify(command)}`);
 
           await page.goto(`https://www.youtube.com/watch?v=${command.data}`);
           logger.debug("Waiting for video to load");
@@ -79,6 +75,68 @@ export const YouTubeApp = (
             await Keyboard.press("k");
             await Keyboard.press("f");
           }
+          break;
+        case "resume":
+          logger.debug(`Resuming video`);
+          await page.evaluate(() => {
+            document.querySelector("video")?.play();
+          });
+          break;
+        case "pause":
+          logger.debug(`Pausing video`);
+          await page.evaluate(() => {
+            document.querySelector("video")?.pause();
+          });
+          break;
+        case "seek":
+          logger.debug(`Seeking to ${command.data}`);
+          await page.evaluate((to: number) => {
+            document.querySelector("video")?.fastSeek(to);
+          }, command.data);
+          break;
+        case "setVolume":
+          logger.debug(`Set volume to ${command.data}`);
+          await page.evaluate((volume) => {
+            const slider = document.querySelector(".ytp-volume-slider");
+            const panel = document.querySelector(".ytp-volume-panel");
+
+            if (!slider || !panel) {
+              throw new Error(
+                "Unable to find element .ytp-volume-slider or .ytp-volume-panel"
+              );
+            }
+
+            panel.setAttribute("style", "width:52px!important");
+            const rect = slider.getBoundingClientRect();
+            const x = rect.left + rect.width * volume;
+            const y = rect.top + rect.height / 2;
+
+            slider.dispatchEvent(
+              new MouseEvent("mousedown", {
+                clientX: x,
+                clientY: y,
+                bubbles: true,
+              })
+            );
+            slider.dispatchEvent(
+              new MouseEvent("mouseup", {
+                clientX: x,
+                clientY: y,
+                bubbles: true,
+              })
+            );
+          }, command.data);
+          break;
+        case "next":
+          logger.debug(`Next video`);
+          await page.evaluate(() => {});
+          break;
+        case "prev":
+          logger.debug(`Previous video`);
+          await page.evaluate(() => {});
+          break;
+        default:
+          throw Error(`Unknown Youtube action ${command}`);
       }
     },
     startApp: async () => {
@@ -131,6 +189,7 @@ function createYoutubeObserver(
         title: document.title,
         position: Math.round(video?.currentTime ?? 0),
         volume: video?.volume ?? 0,
+        muted: video?.muted ?? false,
         state:
           video?.paused === undefined
             ? "stopped"

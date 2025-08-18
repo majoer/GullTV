@@ -1,4 +1,7 @@
-import type { YoutubeSearchResponse } from "../../domain/youtube";
+import type {
+  YoutubeCommand,
+  YoutubeSearchResponse,
+} from "../../domain/youtube";
 
 export const YouTube = {
   search: async (query: string): Promise<YoutubeSearchResponse> => {
@@ -7,7 +10,15 @@ export const YouTube = {
     );
   },
 
-  play: async (id: string): Promise<void> => {
-    return fetch(`/api/youtube/play?id=${id}`).then((r) => r.json());
+  runCommand: async (command: YoutubeCommand): Promise<void> => {
+    const qparams = [`action=${command.action}`];
+
+    if (command.hasPayload) {
+      qparams.push(`data=${command.data}`);
+    }
+
+    return fetch(`/api/youtube/command?${qparams.join("&")}`).then((r) =>
+      r.json()
+    );
   },
 };
