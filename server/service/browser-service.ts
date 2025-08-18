@@ -4,16 +4,13 @@ import os from "os";
 import puppeteer, { Browser, Page } from "puppeteer";
 import { FIREFOX_EXECUTABLE as PATH_FIREFOX_EXECUTABLE } from "../installer/installer-constants";
 import { logger } from "../logger";
+import { defer, firstValueFrom, retry, tap, timer } from "rxjs";
 
 export const FIREFOX_DEBUGGER_PORT = 10000;
 
 export interface BrowserService {
   getPage: () => Page;
   wake: () => Promise<void>;
-}
-
-async function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(() => resolve(), ms));
 }
 
 export const BrowserService = (): BrowserService => {
@@ -49,10 +46,7 @@ export const BrowserService = (): BrowserService => {
       }
 
       if (!browser) {
-        browser = await puppeteer.connect({
-          browserWSEndpoint: `ws://localhost:${FIREFOX_DEBUGGER_PORT}/session`,
-          protocol: "webDriverBiDi",
-        });
+        browser = await connect();
       }
       const pages = await browser.pages();
       page = pages[0] || (await browser.newPage());
@@ -70,6 +64,31 @@ export function getUserDataDir() {
   return userDataDir;
 }
 
+async function connect(): Promise<Browser> {
+  const browserWSEndpoint = `ws://localhost:${FIREFOX_DEBUGGER_PORT}/session`;
+  logger.info(`Connecting to ${browserWSEndpoint}`);
+
+  return firstValueFrom(
+    defer(() =>
+      puppeteer.connect({
+        browserWSEndpoint,
+        protocol: "webDriverBiDi",
+      })
+    ).pipe(
+      retry({
+        count: 20,
+        delay: (error, retryCount) => {
+          logger.debug(`Retrying ${retryCount}/20`);
+          return timer(300);
+        },
+      }),
+      tap(() => {
+        logger.info(`Connected to ${browserWSEndpoint}`);
+      })
+    )
+  );
+}
+
 function start(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const process = spawn(
@@ -85,7 +104,7 @@ function start(): Promise<ChildProcess> {
       }
     );
 
-    process.on("spawn", () => setTimeout(() => resolve(process), 3000));
+    process.on("spawn", () => resolve(process));
     process.on("error", () => reject());
   });
 }

@@ -110,7 +110,6 @@ export const YouTubeApp = (
     },
   };
 };
-export const search = async (query: string) => {};
 
 function y(path: string) {
   return `https://www.googleapis.com${path}`;
@@ -120,14 +119,13 @@ function createYoutubeObserver(
   browserService: BrowserService
 ): Observable<WebsocketEvent> {
   const getStatus = async (): Promise<YoutubePlayerStatus | undefined> => {
-    logger.debug(`Get status`);
     const page = browserService.getPage();
 
     await page.waitForFunction(
       () => (document.querySelector("video")?.readyState || 0) >= 3
     );
 
-    const status = await page.$$eval("video", (e) => {
+    return await page.$$eval("video", (e) => {
       const video = e[0];
       const status: YoutubePlayerStatus = {
         title: document.title,
@@ -145,9 +143,6 @@ function createYoutubeObserver(
       };
       return status;
     });
-
-    logger.debug(`Got status ${status}`);
-    return status;
   };
 
   return interval(1000).pipe(

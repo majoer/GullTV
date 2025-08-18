@@ -22,31 +22,46 @@ wss.on("connection", (socket: WebSocket) => {
   });
 });
 
-app.get("/api/vlc/{*vlcPath}", async (req, res) => {
+app.get("/api/vlc/{*vlcPath}", (req, res) => {
   logger.debug(chalk.cyan(`GET ${req.url}`));
 
   const command = `${req.url.replace("/api/vlc/", "")}`;
-  const result = await appManager.onVlcCommand(command);
-
-  res.status(result.status).json(result.data);
+  appManager
+    .onVlcCommand(command)
+    .then((result) => res.status(result.status).json(result.data))
+    .catch((e) => {
+      logger.error(e);
+      res.status(500).json({});
+    });
 });
 
-app.get("/api/media", async (req, res) => {
+app.get("/api/media", (req, res) => {
   logger.debug(chalk.cyan(`GET ${req.url}`));
   const folder = decodeURIComponent(req.query["folder"] as string) || "";
 
-  const media = await mediaService.getMedia(folder);
-  res.status(200).json(media);
+  mediaService
+    .getMedia(folder)
+    .then((media) => res.status(200).json(media))
+    .catch((e) => {
+      logger.error(e);
+      res.status(500).json({});
+    });
 });
 
-app.get("/api/youtube/search", async (req, res) => {
+app.get("/api/youtube/search", (req, res) => {
   logger.debug(chalk.cyan(`GET ${req.url}`));
   const q = decodeURIComponent(req.query["q"] as string) || "";
 
-  res.status(200).json(await youtubeService.search(q));
+  youtubeService
+    .search(q)
+    .then((data) => res.status(200).json(data))
+    .catch((e) => {
+      logger.error(e);
+      res.status(500).json({});
+    });
 });
 
-app.get("/api/youtube/play", async (req, res) => {
+app.get("/api/youtube/play", (req, res) => {
   logger.debug(chalk.cyan(`GET ${req.url}`));
   const id: string = req.query["id"] as string;
 
@@ -54,9 +69,13 @@ app.get("/api/youtube/play", async (req, res) => {
     logger.error("Missing youtube ID");
     res.status(404);
   } else {
-    res
-      .status(200)
-      .json(await appManager.onYoutubeCommand({ action: "play", data: id }));
+    appManager
+      .onYoutubeCommand({ action: "play", data: id })
+      .then(() => res.status(200).json())
+      .catch((e) => {
+        logger.error(e);
+        res.status(500).json({});
+      });
   }
 });
 
