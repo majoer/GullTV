@@ -52,6 +52,7 @@ export interface YoutubePlayerStatus {
   position: number;
   volume: number;
   muted: boolean;
+  loading: boolean;
   state: "paused" | "playing" | "stopped";
   duration: number;
   subtitles: { id: string; name: string }[];

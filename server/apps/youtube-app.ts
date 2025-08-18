@@ -179,10 +179,6 @@ function createYoutubeObserver(
   const getStatus = async (): Promise<YoutubePlayerStatus | undefined> => {
     const page = browserService.getPage();
 
-    await page.waitForFunction(
-      () => (document.querySelector("video")?.readyState || 0) >= 3
-    );
-
     return await page.$$eval("video", (e) => {
       const video = e[0];
       const status: YoutubePlayerStatus = {
@@ -190,6 +186,7 @@ function createYoutubeObserver(
         position: Math.round(video?.currentTime ?? 0),
         volume: video?.volume ?? 0,
         muted: video?.muted ?? false,
+        loading: video?.readyState < 4,
         state:
           video?.paused === undefined
             ? "stopped"

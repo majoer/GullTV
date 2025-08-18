@@ -80,7 +80,7 @@ export const NoobTubeComponent = () => {
         state={status?.state}
         volume={status?.volume ? status.volume * 100 : 0}
         muted={status?.muted || false}
-        disabled={false}
+        disabled={status?.loading ?? true}
         onNext={async () => {
           await YouTube.runCommand({ action: "next", hasPayload: false });
         }}
