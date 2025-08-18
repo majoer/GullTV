@@ -6,8 +6,6 @@ After=graphical-session.target
 ExecStart=/home/matsj/matsflix/nvm-start.sh
 WorkingDirectory=/home/matsj/matsflix
 Restart=always
-Environment=NODE_ENV=production
-Environment=MEDIA_DIRECTORY=/mnt/media/media
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=myapp

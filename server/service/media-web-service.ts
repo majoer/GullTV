@@ -2,8 +2,9 @@ import fs from "fs/promises";
 import path from "path";
 import { DirectoryMedia, FileMedia, MediaResponse } from "../../domain/media";
 import { ViewProgressService } from "./view-progress-service";
+import { Env } from "../environment";
 
-export const MEDIA_ROOT = process.env.MEDIA_DIRECTORY || "/mnt/gullstore/media";
+export const MEDIA_ROOT = Env.media.rootDir || "/mnt/gullstore/media";
 
 export interface MediaService {
   getMedia: (folder: string) => Promise<MediaResponse>;

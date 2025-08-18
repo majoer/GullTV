@@ -23,8 +23,7 @@ import { Keyboard } from "../os/keyboard";
 import { Program } from "../os/program";
 import { BrowserService } from "../service/browser-service";
 import { WebSocketComs } from "../service/web-socket-coms";
-
-const key = "";
+import { Env } from "../environment";
 
 export interface YouTubeApp extends BaseApp {
   type: "youtube";
@@ -49,12 +48,16 @@ export const YouTubeApp = (
     type: "youtube",
     search: async (query: string) => {
       const url = y(
-        `/youtube/v3/search?key=${key}&type=video&part=snippet&q=${query}`
+        `/youtube/v3/search?key=${Env.youtube.apiKey}&type=video&part=snippet&q=${query}`
       );
 
       logger.debug(chalk.gray(`GET ${url}`));
-      return Promise.resolve(fakeResponse);
-      return fetch(url).then((r) => r.json());
+
+      if (Env.production) {
+        return fetch(url).then((r) => r.json());
+      } else {
+        return Promise.resolve(fakeResponse);
+      }
     },
     runCommand: async (command: YoutubeCommand) => {
       switch (command.action) {
@@ -70,7 +73,7 @@ export const YouTubeApp = (
           );
           logger.debug(`Video ready: Focus, start and fullscreen`);
 
-          if (process.env.NODE_ENV === "production") {
+          if (Env.production) {
             await Program.bringToFront("Mozilla Firefox");
             await Keyboard.press("Escape");
             await Keyboard.press("k");

@@ -16,6 +16,7 @@ ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user stop ${APP_NAME}" || true
 echo "Syncing files..."
 rsync -az --delete ./dist ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete --chmod=744 ./mount.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
+rsync -az --delete ./.env.production ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/.env
 rsync -az --delete ./package.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete ./package-lock.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete --chmod=744 ./nvm-start.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
