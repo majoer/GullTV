@@ -12,16 +12,39 @@ export interface PageInfo {
   resultsPerPage: number;
 }
 
-export interface YoutubeSearchItem {
+export interface BaseYoutubeSearchItem {
   kind: string;
   etag: string;
-  id: VideoId;
   snippet: Snippet;
 }
 
+export interface VideoItem extends BaseYoutubeSearchItem {
+  id: VideoId;
+}
+
+export interface ChannelItem extends BaseYoutubeSearchItem {
+  id: ChannelId;
+}
+
+export interface PlaylistItem extends BaseYoutubeSearchItem {
+  id: PlaylistId;
+}
+
+export type YoutubeSearchItem = VideoItem | ChannelItem | PlaylistItem;
+
 export interface VideoId {
-  kind: string;
+  kind: "youtube#video";
   videoId: string;
+}
+
+export interface ChannelId {
+  kind: "youtube#channel";
+  channelId: string;
+}
+
+export interface PlaylistId {
+  kind: "youtube#playlist";
+  playlistId: string;
 }
 
 export interface Snippet {
