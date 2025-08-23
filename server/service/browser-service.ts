@@ -5,6 +5,7 @@ import puppeteer, { Browser, Page } from "puppeteer";
 import { FIREFOX_EXECUTABLE as PATH_FIREFOX_EXECUTABLE } from "../installer/installer-constants";
 import { logger } from "../logger";
 import { defer, firstValueFrom, retry, tap, timer } from "rxjs";
+import { Env } from "../environment";
 
 export const FIREFOX_DEBUGGER_PORT = 10000;
 
@@ -37,6 +38,7 @@ export const BrowserService = (): BrowserService => {
 
       if (!browserProcess) {
         browserProcess = await start();
+        browserProcess.on("error", (e) => logger.error("Browser error:", e));
         browserProcess.on("exit", () => {
           logger.warn("Browser exited or crashed outside GullTV's control");
           browserProcess = undefined;
@@ -97,7 +99,7 @@ function start(): Promise<ChildProcess> {
         `--remote-debugging-port=${FIREFOX_DEBUGGER_PORT}`,
         `--profile`,
         getUserDataDir(),
-      ],
+      ].concat(Env.firefox.disableSandbox ? ["--disable-sandbox"] : []),
       {
         detached: true,
         stdio: "ignore",

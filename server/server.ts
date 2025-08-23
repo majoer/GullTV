@@ -2,10 +2,9 @@ import chalk from "chalk";
 import express from "express";
 import path from "path";
 import { WebSocket, WebSocketServer } from "ws";
+import { YoutubeAction } from "../domain/youtube";
 import { AppManager } from "./app-manager";
 import { logger } from "./logger";
-import { GullTvInstaller } from "./installer/gulltv-installer";
-import { YoutubeAction } from "../domain/youtube";
 
 const port = 3000;
 const wsPort = 3001;

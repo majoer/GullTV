@@ -1,9 +1,9 @@
 set -e
 
 APP_NAME="GullTV"
-REMOTE_USER="matsj"
-REMOTE_HOST="192.168.10.191"
-REMOTE_DIR="/home/matsj/gulltv"
+REMOTE_USER="gulltv"
+REMOTE_HOST="192.168.10.195"
+REMOTE_DIR="/home/gulltv/gulltv"
 
 if [ "$1" = "clean" ]; then
   echo "Removing tmp files"
@@ -15,11 +15,11 @@ ssh ${REMOTE_USER}@${REMOTE_HOST} "systemctl --user stop ${APP_NAME}" || true
 
 echo "Syncing files..."
 rsync -az --delete ./dist ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
-rsync -az --delete --chmod=744 ./mount.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
+rsync -az --delete --chmod=744 ./shell/mount.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete ./.env.production ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/.env
 rsync -az --delete ./package.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 rsync -az --delete ./package-lock.json ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
-rsync -az --delete --chmod=744 ./nvm-start.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
+rsync -az --delete --chmod=744 ./shell/nvm-start.sh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}
 
 echo "Updating GullTV service .."
 rsync -az --delete ./GullTV.service ${REMOTE_USER}@${REMOTE_HOST}:/tmp/${APP_NAME}.service

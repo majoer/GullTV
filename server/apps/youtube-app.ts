@@ -62,18 +62,23 @@ export const YouTubeApp = (
         case "play":
           logger.debug(`Starting video ${JSON.stringify(command)}`);
 
-          await page.goto(`https://www.youtube.com/watch?v=${command.data}`);
+          await page.goto(`https://www.youtube.com/watch?v=${command.data}`, {
+            waitUntil: "domcontentloaded",
+          });
           logger.debug("Waiting for video to load");
           await page.waitForFunction(
             () => (document.querySelector("video")?.readyState || 0) >= 4
           );
-          logger.debug(`Video ready: Focus, start and fullscreen`);
+          logger.debug(`Video ready`);
 
           if (Env.production) {
+            logger.debug(`Focus, start and fullscreen`);
             await Program.bringToFront("Mozilla Firefox");
             await Keyboard.press("Escape");
-            await Keyboard.press("k");
-            await Keyboard.press("f");
+            // await Keyboard.press("k");
+            setTimeout(() => {
+              Keyboard.press("f");
+            }, 3000);
           }
           break;
         case "resume":

@@ -1,14 +1,14 @@
 [Unit]
-Description=Matsflix
+Description=GullTV
 After=graphical-session.target
 
 [Service]
-ExecStart=/home/matsj/matsflix/nvm-start.sh
-WorkingDirectory=/home/matsj/matsflix
+ExecStart=/home/gulltv/gulltv/nvm-start.sh
+WorkingDirectory=/home/gulltv/gulltv
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=myapp
+SyslogIdentifier=gulltv
 
 [Install]
 WantedBy=default.target
