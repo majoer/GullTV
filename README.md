@@ -47,19 +47,43 @@ npm run dev
 
 ## How to install on a device?
 
-The easiest way to install GullTV is over SSH.
+You have two options:
+
+#### Install GullTV remotely over SSH from another machine
+
+The easiest way to install GullTV is over SSH. This way you don't need a keyboard/mouse for your TV-device and you can deploy new versions fast.
+
 First add a ssh-key to the known_hosts of your TV-device.
-Next run these scripts to configure the TV-device and install the GullTV service onto it:
+Next run these scripts from another computer to configure the TV-device and install the GullTV service onto it:
 
 ```bash
-#Install dependencies
+#Install node dependencies
 npm install
 
-# Prepare a device for GullTV
+# Prepare a device for GullTV (installs OS dependencies and configures the firewall. Assumes a Raspberry PI 5)
 npm run setup
 
 # Deploy GullTV, run this every time you want to update the remote device
 npm run deploy
+```
+
+#### Install GullTV directly on the device
+
+You can clone the repo onto your TV-device, but it is more work to set up correctly.
+
+```bash
+# Install node dependencies
+npm install
+
+# Install the OS dependencies
+#TODO
+
+# Build the project
+npm run build
+
+# Start the service (you should also set up a a process manager)
+npm run start
+
 ```
 
 ## Useful docs
