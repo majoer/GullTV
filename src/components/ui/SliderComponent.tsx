@@ -101,10 +101,14 @@ export const SliderComponent = (props: SliderComponentProps) => {
           setDragging(true);
         }}
         onTouchStart={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
           setDragging(true);
         }}
         onDragEnd={() => setDragging(false)}
         onTouchEnd={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
           setDragging(false);
         }}
         onDrag={(e) => {
@@ -114,6 +118,9 @@ export const SliderComponent = (props: SliderComponentProps) => {
           onChange(calculateDragValue(e));
         }}
         onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
           if (e.touches[0]?.clientX === 0 && e.touches[0]?.clientY === 0) {
             return;
           }
