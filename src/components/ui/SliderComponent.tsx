@@ -78,7 +78,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
 
         setTitle(title);
       }}
-      className={`${
+      className={`touch-none ${
         horizontal ? "w-full h-2 my-3" : "w-2 h-full"
       } rounded-2xl relative cursor-pointer ${
         style === "black" ? "bg-black" : "bg-sky-100"
@@ -88,7 +88,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
       }}
     >
       <div
-        className={`absolute ${
+        className={`w-10 h-10 absolute ${
           horizontal ? "top-1/2 -translate-y-1/2" : "left-1/2 translate-y-1/2"
         }  -translate-x-1/2 cursor-pointer`}
         style={
@@ -100,11 +100,13 @@ export const SliderComponent = (props: SliderComponentProps) => {
           e.dataTransfer.setDragImage(hiddenElement, 0, 0);
           setDragging(true);
         }}
-        onTouchStart={() => {
+        onTouchStart={(e) => {
           setDragging(true);
         }}
         onDragEnd={() => setDragging(false)}
-        onTouchEnd={() => setDragging(false)}
+        onTouchEnd={(e) => {
+          setDragging(false);
+        }}
         onDrag={(e) => {
           if (e.clientX === 0 && e.clientY === 0) {
             return;
@@ -112,9 +114,6 @@ export const SliderComponent = (props: SliderComponentProps) => {
           onChange(calculateDragValue(e));
         }}
         onTouchMove={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
           if (e.touches[0]?.clientX === 0 && e.touches[0]?.clientY === 0) {
             return;
           }
@@ -124,7 +123,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
           e.stopPropagation();
         }}
       >
-        🟠
+        <div className="absolute left-1/2 top-1/2 -translate-1/2">🟠</div>
       </div>
     </div>
   );
