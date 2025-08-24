@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 import type { StreamInfo } from "../../../domain/vlc-media-status";
 import type { WebsocketEvent } from "../../../domain/websocket";
 import { MediaApi } from "../../api/media-api";
 import { VlcApi } from "../../api/vlc-api";
-import { FileNavigator } from "./FileNavigator";
 import { MediaControlPanel } from "../common/MediaControlPanel";
+import { FileNavigator } from "./FileNavigator";
 import { RecentsComponent } from "./RecentsComponent";
 
 export const MatsflixComponent = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const folder = location.pathname.replace("matsflix", "");
 
