@@ -41,13 +41,19 @@ export const SliderComponent = (props: SliderComponentProps) => {
   );
 
   const calculateDragValue = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>): number => {
-      const sliderPathDiv = e.currentTarget.parentElement!!;
-      var rect = sliderPathDiv.getBoundingClientRect();
+    (
+      me?: React.MouseEvent<HTMLDivElement, MouseEvent>,
+      te?: React.TouchEvent<HTMLDivElement>
+    ): number => {
+      const currentTarget = me ? me.currentTarget : te!.currentTarget;
+      const sliderPathDiv = currentTarget.parentElement!!;
+      const rect = sliderPathDiv.getBoundingClientRect();
 
+      const clientX = me ? me.clientX : te!.touches[0]!.clientX;
+      const clientY = me ? me.clientY : te!.touches[0]!.clientY;
       const ratio = horizontal
-        ? (e.clientX - rect.left) / sliderPathDiv.clientWidth
-        : (e.clientY - rect.top) / sliderPathDiv.clientHeight;
+        ? (clientX - rect.left) / sliderPathDiv.clientWidth
+        : (clientY - rect.top) / sliderPathDiv.clientHeight;
 
       const value = horizontal ? ratio * max : max - ratio * max;
 
@@ -77,7 +83,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
       } rounded-2xl relative cursor-pointer ${
         style === "black" ? "bg-black" : "bg-sky-100"
       }`}
-      onMouseDown={async (e) => {
+      onClick={async (e) => {
         onChange(calculateClickValue(e));
       }}
     >
@@ -94,12 +100,25 @@ export const SliderComponent = (props: SliderComponentProps) => {
           e.dataTransfer.setDragImage(hiddenElement, 0, 0);
           setDragging(true);
         }}
+        onTouchStart={() => {
+          setDragging(true);
+        }}
         onDragEnd={() => setDragging(false)}
+        onTouchEnd={() => setDragging(false)}
         onDrag={(e) => {
           if (e.clientX === 0 && e.clientY === 0) {
             return;
           }
           onChange(calculateDragValue(e));
+        }}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (e.touches[0]?.clientX === 0 && e.touches[0]?.clientY === 0) {
+            return;
+          }
+          onChange(calculateDragValue(undefined, e));
         }}
         onMouseDown={(e) => {
           e.stopPropagation();

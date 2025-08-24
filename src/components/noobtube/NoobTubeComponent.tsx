@@ -6,7 +6,7 @@ import type {
   YoutubeSearchResponse,
 } from "../../../domain/youtube";
 import { YouTube } from "../../api/youtube-api";
-import { MediaControlPanel } from "../matsflix/MediaControlPanel";
+import { MediaControlPanel } from "../common/MediaControlPanel";
 import { ChipButtonComponent } from "../ui/ChipButtonComponent";
 import { SearchInputComponent } from "./SearchInputComponent";
 
@@ -54,7 +54,7 @@ export const NoobTubeComponent = () => {
   const status = event?.type === "youtube-status" ? event.data : undefined;
 
   return (
-    <div className="m-auto">
+    <div className="m-auto mb-32">
       <SearchInputComponent
         onSearch={async (query) => {
           if (query) {

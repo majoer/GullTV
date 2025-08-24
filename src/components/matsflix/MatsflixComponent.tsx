@@ -6,7 +6,7 @@ import type { WebsocketEvent } from "../../../domain/websocket";
 import { MediaApi } from "../../api/media-api";
 import { VlcApi } from "../../api/vlc-api";
 import { FileNavigator } from "./FileNavigator";
-import { MediaControlPanel } from "./MediaControlPanel";
+import { MediaControlPanel } from "../common/MediaControlPanel";
 import { RecentsComponent } from "./RecentsComponent";
 
 export const MatsflixComponent = () => {
@@ -70,7 +70,7 @@ export const MatsflixComponent = () => {
         state={vlcStatus?.current.state}
         time={vlcStatus?.current.time || 0}
         length={vlcStatus?.current.length || 0}
-        volume={vlcStatus?.current.volume ? vlcStatus.current.volume / 320 : 0}
+        volume={vlcStatus?.current.volume ? vlcStatus.current.volume * 0.32 : 0}
         muted={false}
         title={category?.meta.filename || lastWatched?.name || ""}
         audioTracks={audioStreams}
@@ -96,7 +96,7 @@ export const MatsflixComponent = () => {
           }
         }}
         onSetVolume={async (v) => {
-          await VlcApi.setVolume(v);
+          await VlcApi.setVolume(Math.round(v * 3.2));
         }}
         onSeek={async (v) => {
           await VlcApi.seek(v);
