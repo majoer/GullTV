@@ -30,13 +30,13 @@ export const File = (props: FileProps) => {
           }
         }}
       >
-        <div className="relative">
-          <div className=" overflow-clip mr-6">{props.file.name}</div>
+        <div className="flex justify-between items-center">
+          <div className="break-all">{props.file.name}</div>
           {props.file.isDirectory ? (
-            <Icon.FOLDER className="absolute right-0 top-1/2 -translate-y-1/2 fill-sky-100" />
+            <Icon.FOLDER className="shrink-0 fill-sky-100" />
           ) : (
             <Icon.PLAY
-              className={`absolute -right-1 top-1/2 -translate-y-1/2 ${
+              className={`shrink-0 ${
                 isPlaying && fileIsLoaded ? "animate-pulse" : ""
               } ${
                 fileIsLoaded

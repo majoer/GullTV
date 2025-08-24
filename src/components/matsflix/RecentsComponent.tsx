@@ -16,7 +16,7 @@ export const RecentsComponent = () => {
       .sort(
         (a, b) => (progressMap as any)[b].time - (progressMap as any)[a].time
       )
-      .splice(0);
+      .splice(0, 3);
   }, [data]);
 
   if (isPending || isError) {
@@ -33,9 +33,9 @@ export const RecentsComponent = () => {
             className={`m-2 p-2 bg-gray-800 rounded-md overflow-clip`}
             to={`/matsflix/${r}`}
           >
-            <div className="relative">
-              {r}
-              <Icon.FOLDER className="absolute right-0 top-1/2 -translate-y-1/2 fill-yellow-200" />
+            <div className="flex justify-between items-center">
+              <div className="break-all">{r}</div>
+              <Icon.FOLDER className="shrink-0 fill-yellow-200" />
             </div>
           </NavLinkComponent>
         ))}

@@ -21,9 +21,9 @@ export const Icon = {
   ),
   PLAY: ({ className }: IconProps) => (
     <svg
-      height="38"
-      width="38"
-      viewBox="0 0 24 24"
+      height="24"
+      width="24"
+      viewBox="5 4 15 15"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
