@@ -8,4 +8,5 @@ export interface ViewProgress {
 export interface ViewProgressFile {
   filename: string;
   position: number;
+  time: number;
 }

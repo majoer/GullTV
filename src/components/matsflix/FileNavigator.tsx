@@ -18,7 +18,7 @@ export const FileNavigator = (props: FileNavigatorProps) => {
 
   if (isPending) {
     return (
-      <div className="animate-fadein-slow">
+      <div className="">
         <svg
           className="animate-spin absolute left-1/2 top-1/2 -translate-1/2 fill-sky-100"
           width="48"
@@ -39,17 +39,20 @@ export const FileNavigator = (props: FileNavigatorProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 animate-fadein-fast">
-      {allFiles.map((file) => (
-        <File
-          isPlaying={isPlaying}
-          hasLoadedFileInParent={hasLoadedFile}
-          playingFilename={playingFilename}
-          key={file.name}
-          file={file}
-          allFiles={allFiles}
-        ></File>
-      ))}
+    <div>
+      Media
+      <div className="grid grid-cols-1 md:grid-cols-3 animate-fadein-fast">
+        {allFiles.map((file) => (
+          <File
+            isPlaying={isPlaying}
+            hasLoadedFileInParent={hasLoadedFile}
+            playingFilename={playingFilename}
+            key={file.name}
+            file={file}
+            allFiles={allFiles}
+          ></File>
+        ))}
+      </div>
     </div>
   );
 };

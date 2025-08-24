@@ -1,13 +1,15 @@
 import fs from "fs/promises";
 import path from "path";
 import { DirectoryMedia, FileMedia, MediaResponse } from "../../domain/media";
-import { ViewProgressService } from "./view-progress-service";
+import { ViewProgress } from "../../domain/progress";
 import { Env } from "../environment";
+import { ViewProgressService } from "./view-progress-service";
 
 export const MEDIA_ROOT = Env.GULLTV_MEDIA_DIRECTORY || "/mnt/gullstore/media";
 
 export interface MediaService {
   getMedia: (folder: string) => Promise<MediaResponse>;
+  getViewProgress: () => ViewProgress;
 }
 
 export function relativeMediaRoot(absolutePath: string) {
@@ -69,5 +71,9 @@ export const MediaFileService = (
       media,
       lastWatched,
     };
+  },
+
+  getViewProgress: (): ViewProgress => {
+    return viewProgressService.getProgressState();
   },
 });

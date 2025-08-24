@@ -149,6 +149,7 @@ async function saveProgressIfPlaying(
       viewProgressService.saveProgress(decodeURIComponent(relativeUri), {
         position: status.current.position,
         filename: filename,
+        time: Date.now(),
       });
     }
   }

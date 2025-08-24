@@ -35,7 +35,7 @@ app.get("/api/vlc/{*vlcPath}", (req, res) => {
     });
 });
 
-app.get("/api/media", (req, res) => {
+app.get("/api/media/files", (req, res) => {
   logger.debug(chalk.cyan(`GET ${req.url}`));
   const folder = decodeURIComponent(req.query["folder"] as string) || "";
 
@@ -46,6 +46,13 @@ app.get("/api/media", (req, res) => {
       logger.error(e);
       res.status(500).json({});
     });
+});
+
+app.get("/api/media/view-progress", (req, res) => {
+  logger.debug(chalk.cyan(`GET ${req.url}`));
+  const folder = decodeURIComponent(req.query["folder"] as string) || "";
+
+  res.status(200).json(mediaService.getViewProgress());
 });
 
 app.get("/api/youtube/search", (req, res) => {
