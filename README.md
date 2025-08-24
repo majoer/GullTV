@@ -40,7 +40,7 @@ First add a ssh-key to the known_hosts of your TV-device.
 Next run these scripts to configure the TV-device and install the GullTV service onto it:
 
 ```bash
-#
+#Install dependencies
 npm install
 
 # Prepare a device for GullTV
