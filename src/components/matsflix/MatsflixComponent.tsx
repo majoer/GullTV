@@ -77,16 +77,12 @@ export const MatsflixComponent = () => {
         subtitles={subtitleStreams}
         disabled={!vlcStatus}
         onNext={async () => {
-          if (lastWatched) navigate(`/matsflix/${lastWatched.parent}`);
-
           await VlcApi.next();
         }}
         onPrev={async () => {
-          if (lastWatched) navigate(`/matsflix/${lastWatched.parent}`);
           await VlcApi.previous();
         }}
         onPause={async () => {
-          if (lastWatched) navigate(`/matsflix/${lastWatched.parent}`);
           await VlcApi.pause();
         }}
         onPlay={async () => {
