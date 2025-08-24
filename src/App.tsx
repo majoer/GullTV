@@ -4,6 +4,7 @@ import { BreadcrumbsComponent } from "./components/common/Breadcrumbs";
 import { GullTVComponent } from "./components/common/GullTVComponent";
 import { MatsflixComponent } from "./components/matsflix/MatsflixComponent";
 import { NoobTubeComponent } from "./components/noobtube/NoobTubeComponent";
+import { SystemComponent } from "./components/system/SystemComponent";
 
 const queryClient = new QueryClient();
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<GullTVComponent />}></Route>
             <Route path="/matsflix*" element={<MatsflixComponent />}></Route>
             <Route path="/noobtube" element={<NoobTubeComponent />}></Route>
+            <Route path="/system" element={<SystemComponent />}></Route>
           </Routes>
         </div>
       </BrowserRouter>

@@ -1,3 +1,4 @@
+import { Icon } from "../ui/Icon";
 import { NavLinkComponent } from "../ui/NavLinkComponent";
 
 export const GullTVComponent = () => {
@@ -29,6 +30,13 @@ export const GullTVComponent = () => {
           />
         </svg>
         <strong>NoobTube</strong>
+      </NavLinkComponent>
+      <NavLinkComponent
+        to={"/system"}
+        className="w-full md:w-64 h-34 p-10 m-5 rounded-md flex flex-row items-center justify-center hover:bg-yellow-100 bg-white text-black"
+      >
+        <Icon.COG /> 
+        <strong>System</strong>
       </NavLinkComponent>
     </div>
   );

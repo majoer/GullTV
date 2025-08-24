@@ -14,7 +14,7 @@ export const ChipButtonComponent = ({
 }: ChipButtonComponentProps) => {
   return (
     <ButtonComponent
-      className={`bg-gray-800 hover: rounded-2xl p-2 ${
+      className={`${
         selected ? "bg-green-900" : ""
       }`}
       onClick={onClick}

@@ -8,6 +8,8 @@ import { GullTvInstaller } from "./installer/gulltv-installer";
 import { BrowserService } from "./service/browser-service";
 import { MediaFileService } from "./service/media-web-service";
 import { ViewProgressService } from "./service/view-progress-service";
+import { SystemCommand } from "../domain/system";
+import { SystemService } from "./service/system-service";
 
 export type AppType = "vlc" | "youtube";
 
@@ -30,6 +32,7 @@ export const AppManager = (wss: WebSocketServer) => {
   const vlcApp = VlcApp(wss, viewProgressService);
 
   const browserService = BrowserService();
+  const systemService = SystemService();
   const youtubeApp = YouTubeApp(wss, browserService);
 
   return {
@@ -52,6 +55,15 @@ export const AppManager = (wss: WebSocketServer) => {
       currentApp = youtubeApp;
       await currentApp.startApp();
       return youtubeApp.runCommand(command);
+    },
+    onSystemCommand: async (command: SystemCommand): Promise<void> => {
+      switch (command.action) {
+        case "reboot":
+          return systemService.reboot();
+        case "restart-service":
+          return systemService.restartService();
+        default: throw Error("Unknown system command")
+      }
     },
   };
 };

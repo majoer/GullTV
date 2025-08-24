@@ -5,6 +5,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { YoutubeAction } from "../domain/youtube";
 import { AppManager } from "./app-manager";
 import { logger } from "./logger";
+import { SystemAction } from "../domain/system";
 
 const port = 3000;
 const wsPort = 3001;
@@ -83,6 +84,28 @@ app.get("/api/youtube/command", (req, res) => {
 
   appManager
     .onYoutubeCommand({ action, data, hasPayload: data!! })
+    .then(() => res.status(200).json())
+    .catch((e) => {
+      logger.error(e);
+      res.status(500).json({});
+    });
+});
+
+app.get("/api/system/command", (req, res) => {
+  logger.debug(chalk.cyan(`GET ${req.url}`));
+  const action: SystemAction = req.query["action"] as SystemAction;
+  const data: any = req.query["data"]
+    ? parsePrimitive(req.query["data"] as string)
+    : undefined;
+
+  if (!action) {
+    logger.error("Missing system Action");
+    res.status(404);
+    return;
+  }
+
+  appManager
+    .onSystemCommand({ action, hasPayload: data!! })
     .then(() => res.status(200).json())
     .catch((e) => {
       logger.error(e);
