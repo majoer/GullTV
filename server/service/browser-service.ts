@@ -99,7 +99,7 @@ function start(): Promise<ChildProcess> {
         `--remote-debugging-port=${FIREFOX_DEBUGGER_PORT}`,
         `--profile`,
         getUserDataDir(),
-      ].concat(Env.firefox.disableSandbox ? ["--disable-sandbox"] : []),
+      ].concat(Env.GULLTV_FIREFOX_DISABLE_SANDBOX ? ["--disable-sandbox"] : []),
       {
         detached: true,
         stdio: "ignore",

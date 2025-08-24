@@ -35,7 +35,34 @@ It can be run on a small TV-computer and has been tested on a Raspberry Pi 5.
 
 ## How to install?
 
-- Coming
+The easiest way to install GullTV is over SSH.
+First add a ssh-key to the known_hosts of your TV-device.
+Next run these scripts to configure the TV-device and install the GullTV service onto it:
+
+```bash
+#
+npm install
+
+# Prepare a device for GullTV
+npm run setup
+
+# Deploy GullTV, run this every time you want to update the remote device
+npm run deploy
+```
+
+## Try it out / Develop
+
+```bash
+# Clone repo
+git clone https://github.com/majoer/GullTV.git
+
+# Install dependencies
+cd GullTV
+npm install
+
+# Launch dev mode
+npm run dev
+```
 
 ## Useful docs
 

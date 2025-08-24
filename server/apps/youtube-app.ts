@@ -44,12 +44,12 @@ export const YouTubeApp = (
     type: "youtube",
     search: async (query: string) => {
       const url = y(
-        `/youtube/v3/search?key=${Env.youtube.apiKey}&type=video&part=snippet&q=${query}&maxResults=50`
+        `/youtube/v3/search?key=${Env.GULLTV_YOUTUBE_API_KEY}&type=video&part=snippet&q=${query}&maxResults=50`
       );
 
       logger.debug(chalk.gray(`GET ${url}`));
 
-      if (Env.production) {
+      if (Env.isProduction) {
         return fetch(url).then((r) => r.json());
       } else {
         return Promise.resolve(fakeResponse);
@@ -71,7 +71,7 @@ export const YouTubeApp = (
           );
           logger.debug(`Video ready`);
 
-          if (Env.production) {
+          if (Env.isProduction) {
             logger.debug(`Focus, start and fullscreen`);
             await Program.bringToFront("Mozilla Firefox");
             await Keyboard.press("Escape");
