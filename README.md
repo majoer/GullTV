@@ -27,8 +27,6 @@ Features:
 
 ## Prerequisites
 
-It can be run on a small TV-computer and has been tested on a Raspberry Pi 5.
-
 - A media folder acceessible to the service (can be a network drive)
 - X11 window manager
 - A youtube search API key (configured in google cloud console)
