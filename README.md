@@ -31,7 +31,21 @@ Features:
 - X11 window manager
 - A youtube search API key (configured in google cloud console)
 
-## How to install?
+## Try it out / Develop
+
+```bash
+# Clone repo
+git clone https://github.com/majoer/GullTV.git
+
+# Install dependencies
+cd GullTV
+npm install
+
+# Launch dev mode
+npm run dev
+```
+
+## How to install on a device?
 
 The easiest way to install GullTV is over SSH.
 First add a ssh-key to the known_hosts of your TV-device.
@@ -46,20 +60,6 @@ npm run setup
 
 # Deploy GullTV, run this every time you want to update the remote device
 npm run deploy
-```
-
-## Try it out / Develop
-
-```bash
-# Clone repo
-git clone https://github.com/majoer/GullTV.git
-
-# Install dependencies
-cd GullTV
-npm install
-
-# Launch dev mode
-npm run dev
 ```
 
 ## Useful docs
