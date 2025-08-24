@@ -7,7 +7,7 @@ export const BreadcrumbsComponent = () => {
     location.pathname === "/" ? [] : location.pathname.split("/").slice(1);
 
   return (
-    <div className="flex mx-2 mt-1 mb-1">
+    <div className="flex mx-2 mt-1 mb-1 overflow-hidden">
       <NavLinkComponent to="/">
         <svg
           width="24"
@@ -25,9 +25,15 @@ export const BreadcrumbsComponent = () => {
         </svg>
       </NavLinkComponent>
       {parts.map((p, i) => (
-        <NavLinkComponent key={p} to={`/${parts.slice(0, i + 1).join("/")}`}>
-          <span className="mx-1">/</span>
-          {decodeURIComponent(p)}
+        <NavLinkComponent
+          key={p}
+          to={`/${parts.slice(0, i + 1).join("/")}`}
+          className="whitespace-nowrap inline-flex min-w-15"
+        >
+          <strong className="mx-1 shrink-0 text-white">/</strong>
+          <span className="overflow-hidden whitespace-nowrap">
+            {decodeURIComponent(p)}
+          </span>
         </NavLinkComponent>
       ))}
     </div>
