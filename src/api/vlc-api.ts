@@ -88,9 +88,10 @@ export const VlcApi = {
     }
 
     const playlist = await this.getPlaylist();
-    const item = playlist.children[0]?.children
-      .filter((c) => c.type === "leaf")
-      .find((c) => c.name === file.name);
+    const item = playlist.children
+      .find((c) => c.name === "Playlist")
+      ?.children.filter((c) => c.type === "leaf")
+      .find((c) => decodeURIComponent(c.uri).endsWith(file.path))
 
     if (item) {
       return await this.playPlaylistItem(item.id);

@@ -26,6 +26,7 @@ import { MEDIA_ROOT, relativeMediaRoot } from "../service/media-web-service";
 import { ViewProgressService } from "../service/view-progress-service";
 import { WebSocketComs } from "../service/web-socket-coms";
 import { Program } from "../os/program";
+import { Env } from "../environment";
 
 export const vlcTarget = "http://localhost:8080";
 
@@ -129,9 +130,18 @@ export const getPlaylistItem = async (
     return undefined;
   }
 
-  return playlist.data.children[0].children
-    .filter((c) => c.type === "leaf")
-    .find((c) => c.name === name);
+  const item = playlist.data.children
+    .find((c) => c.name === "Playlist")
+    ?.children.filter((c) => c.type === "leaf")
+    .find((c) => decodeURIComponent(c.uri.split("/").slice(-1)[0]) === name);
+
+  if (!item) {
+    logger.error(
+      `Expected to find ${name} in playlist ${JSON.stringify(playlist.data)}`
+    );
+  }
+
+  return item;
 };
 
 async function saveProgressIfPlaying(
@@ -142,11 +152,16 @@ async function saveProgressIfPlaying(
 
   if (status.current?.state === "playing" && filename) {
     const item = await getPlaylistItem(filename);
-    const absoluteUri = item?.uri.split("/").slice(2, -1).join("/");
-    if (absoluteUri) {
-      const relativeUri = relativeMediaRoot(absoluteUri);
+    const absParentUri = item?.uri
+      .replace("file://", "")
+      .split("/")
+      .slice(0, -1)
+      .join("/");
+      
+    if (absParentUri) {
+      const relativeParentUri = relativeMediaRoot(absParentUri);
 
-      viewProgressService.saveProgress(decodeURIComponent(relativeUri), {
+      viewProgressService.saveProgress(decodeURIComponent(relativeParentUri), {
         position: status.current.position,
         filename: filename,
         time: Date.now(),

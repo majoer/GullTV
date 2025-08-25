@@ -25,7 +25,7 @@ export const RecentsComponent = () => {
 
   return (
     <div>
-      Continue watching
+      {recents.length > 0 ? "Continue watching" : ""}
       <div className="grid grid-cols-1 md:grid-cols-3">
         {recents.map((r) => (
           <NavLinkComponent
