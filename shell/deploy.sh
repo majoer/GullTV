@@ -7,7 +7,7 @@ REMOTE_DIR="/home/gulltv/gulltv"
 
 if [ "$1" = "clean" ]; then
   echo "Removing tmp files"
-  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm /tmp/gulltv*" || true
+  ssh ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ~/.gulltv/cache" || true
 fi
 
 echo "Stopping service..."

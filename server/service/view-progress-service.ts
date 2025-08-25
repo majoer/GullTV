@@ -1,9 +1,9 @@
 import fs from "fs";
-import path from 'path'
+import path from 'path';
 import { ViewProgress, ViewProgressFile } from "../../domain/progress";
-import { PATH_GULLTV } from "../installer/installer-constants";
+import { PATH_GULLTV_CACHE } from "../installer/installer-constants";
 
-const progressFilePath = path.join(PATH_GULLTV, "matsflix-view-progress.json");
+const progressFilePath = path.join(PATH_GULLTV_CACHE, "matsflix-view-progress.json");
 
 export interface ViewProgressService {
   getProgressState: () => ViewProgress;
