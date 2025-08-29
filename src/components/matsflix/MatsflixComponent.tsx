@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
-import useWebSocket from "react-use-websocket";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import type { StreamInfo } from "../../../domain/vlc-media-status";
 import type { WebsocketEvent } from "../../../domain/websocket";
 import { MediaApi } from "../../api/media-api";
@@ -22,7 +22,7 @@ export const MatsflixComponent = () => {
     queryFn: () => MediaApi.getMedia(folder),
   });
 
-  const { lastJsonMessage: event } = useWebSocket<WebsocketEvent>(
+  const { lastJsonMessage: event, readyState } = useWebSocket<WebsocketEvent>(
     `ws://${window.location.hostname}:3001`,
     {
       share: false,
@@ -74,7 +74,7 @@ export const MatsflixComponent = () => {
         title={category?.meta.filename || lastWatched?.name || ""}
         audioTracks={audioStreams}
         subtitles={subtitleStreams}
-        disabled={!vlcStatus}
+        disabled={!vlcStatus || readyState !== ReadyState.OPEN}
         onNext={async () => {
           await VlcApi.next();
         }}

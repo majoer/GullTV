@@ -10,9 +10,13 @@ export const MediaButtonComponent = (props: MediaButtonComponentProps) => {
     <button
       {...rest}
       disabled={disabled}
-      className={`cursor-pointer w-15 h-15 ${
-        disabled ? "fill-gray-500" : "fill-orange-500 hover:fill-orange-300"
-      }  ${className ?? ""}`}
+      className={`w-15 h-15
+         ${
+           disabled ? "fill-gray-500" : "fill-orange-500 hover:fill-orange-300"
+         } 
+         ${className ?? ""}
+         ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+         `}
     >
       {children}
     </button>

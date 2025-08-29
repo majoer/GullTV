@@ -49,6 +49,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           orientation="horizontal"
           style="white"
           value={time}
+          disabled={disabled}
           max={length}
           onChange={async (v) => props.onSeek(v)}
           formatTitle={(seconds) => {
