@@ -8,6 +8,7 @@ import { GullTvInstaller } from "./installer/gulltv-installer";
 import { BrowserService } from "./service/browser-service";
 import { MediaFileService } from "./service/media-web-service";
 import { ViewProgressService } from "./service/view-progress-service";
+import { HdmiService } from "./service/hdmi-service";
 
 export type AppType = "vlc" | "youtube";
 
@@ -25,6 +26,7 @@ export const AppManager = (wss: WebSocketServer) => {
   const installer = GullTvInstaller();
   installer.install().then();
 
+  const hdmiService = HdmiService();
   const viewProgressService = ViewProgressService();
   const mediaService = MediaFileService(viewProgressService);
   const vlcApp = VlcApp(wss, viewProgressService);
