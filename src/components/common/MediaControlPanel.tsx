@@ -214,6 +214,7 @@ export const MediaControlPanel = (props: MediaControlPanelProps) => {
           <PopupComponent open={volumeOpen}>
             <div className="h-34 w-6 flex justify-center">
               <SliderComponent
+                disabled={false}
                 orientation="vertical"
                 style="black"
                 value={volume}
