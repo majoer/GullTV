@@ -22,6 +22,11 @@ export const MatsflixComponent = () => {
     queryFn: () => MediaApi.getMedia(folder),
   });
 
+  const { data: initialStatus } = useQuery({
+    queryKey: [],
+    queryFn: () => VlcApi.getStatus()
+  })
+
   const { lastJsonMessage: event, readyState } = useWebSocket<WebsocketEvent>(
     `ws://${window.location.hostname}:3001`,
     {
@@ -33,13 +38,12 @@ export const MatsflixComponent = () => {
   if (error) return <>Error</>;
 
   const mediaResponse = event?.type === "media" ? event.data : initialMedia;
-  const vlcStatus = event?.type === "vlc-status" ? event.data : undefined;
-  const isPlaying = vlcStatus?.current?.state === "playing";
-  const playingFilename =
-    vlcStatus?.current?.information?.category.meta.filename;
+  const vlcStatus = event?.type === "vlc-status" ? event.data?.current : initialStatus;
+  const isPlaying = vlcStatus?.state === "playing";
+  const playingFilename = vlcStatus?.information?.category.meta.filename;
   const lastWatched = mediaResponse?.lastWatched;
 
-  const category = vlcStatus?.current.information?.category;
+  const category = vlcStatus?.information?.category
   const { meta: _, ...streams } = category || ({} as StreamInfo);
   const allStreams = Object.keys(streams);
   const audioStreams = allStreams
@@ -66,10 +70,10 @@ export const MatsflixComponent = () => {
         allFiles={mediaResponse?.media ?? []}
       />
       <MediaControlPanel
-        state={vlcStatus?.current.state}
-        time={vlcStatus?.current.time || 0}
-        length={vlcStatus?.current.length || 0}
-        volume={vlcStatus?.current.volume ? vlcStatus.current.volume * 0.32 : 0}
+        state={vlcStatus?.state}
+        time={vlcStatus?.time || 0}
+        length={vlcStatus?.length || 0}
+        volume={vlcStatus?.volume ? vlcStatus.volume * 0.32 : 0}
         muted={false}
         title={category?.meta.filename || lastWatched?.name || ""}
         audioTracks={audioStreams}
@@ -85,7 +89,7 @@ export const MatsflixComponent = () => {
           await VlcApi.pause();
         }}
         onPlay={async () => {
-          if (vlcStatus?.current.information) {
+          if (vlcStatus?.information) {
             await VlcApi.resume();
             await VlcApi.fullscreenCheck();
           }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useThrottledCallback } from "use-debounce";
 
 export interface SliderComponentProps {
   orientation: "vertical" | "horizontal";
@@ -29,7 +29,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
   const lastUpdated = useRef(Date.now());
   const position = (100 * (internalValue || 0)) / max;
   const horizontal = orientation === "horizontal";
-  const debounced = useDebouncedCallback(props.onChange, 300);
+  const debounced = useThrottledCallback(props.onChange, 150)
   const onChange = useCallback((newValue: number) => {
     setInternalValue(newValue);
     debounced(newValue);
@@ -72,7 +72,7 @@ export const SliderComponent = (props: SliderComponentProps) => {
 
   useEffect(() => {
     const timeSinceLastInternalChange = Date.now() - lastUpdated.current;
-    if (!dragging && timeSinceLastInternalChange > 1500) {
+    if (!dragging && timeSinceLastInternalChange > 50) {
       setInternalValue(value);
     }
   }, [value]);
